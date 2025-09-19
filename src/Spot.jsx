@@ -18,7 +18,7 @@ function Spot({onSeatsFetched}) {
           method: "GET",
           headers: {
             Authorization:
-              "Bearer 5RRXZZ0pkfFXOw2ylF0SC1jxQuBzCmVKXBlgqO3b2be450c5",
+              "Bearer 6uborFki3ditiznK52uk7NSa3OOgpgt4VDzxpyZi3a0db4d8",
             "Content-Type": "application/json",
           },
         }
