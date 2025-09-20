@@ -266,6 +266,51 @@ function AvailableSpots() {
                         <div>
                             <p>Your booking has been approved! 🎉</p>
                             <p>Please proceed to payment at the counter.</p>
+                            <div
+                                style={{
+                                    display: 'flex',        // side by side
+                                    justifyContent: 'center', // center horizontally
+                                    gap: '20px',            // space between images
+                                    transform: 'scale(1)',
+                                    transition: 'transform 0.3s ease, filter 0.3s ease',
+                                    filter: 'brightness(0.9)',
+                                    cursor: 'pointer',
+                                }}
+                                onMouseOver={e => {
+                                    e.currentTarget.style.transform = 'scale(1.05)';  // zoom parent
+                                    e.currentTarget.style.filter = 'brightness(1)';
+                                }}
+                                onMouseOut={e => {
+                                    e.currentTarget.style.transform = 'scale(1)';
+                                    e.currentTarget.style.filter = 'brightness(0.9)';
+                                }}
+                            >
+                                <img
+                                    src="data:image/png;base64,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"
+                                    alt="qr code"
+                                    style={{
+                                        width: '200px',
+                                        height: '200px',
+                                        objectFit: 'cover',
+                                        borderRadius: '12px',
+                                        boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
+                                    }}
+                                />
+
+                                <img
+                                    src="https://cdn.vectorstock.com/i/500p/85/19/public-bus-ticket-icon-vector-32688519.jpg"
+                                    alt="busticket"
+                                    style={{
+                                        width: '300px',
+                                        height: '200px',
+                                        objectFit: 'cover',
+                                        borderRadius: '12px',
+                                        boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
+                                    }}
+                                />
+                                
+                            </div>
+                                    <h3>Tiket no:- 567421</h3>
                         </div>
                     )}
                     {bookingData.status === 'denied' && (
