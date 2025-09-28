@@ -1,11 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { WhyChooseUs } from "./components/ui/why-choose-us";
+import { Button } from "@/components/ui/button";
+import { Bot } from "lucide-react";
 
 function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="hero">
+      {/* <section className="hero">
         <img
           src="https://media.istockphoto.com/id/1154151207/photo/white-bus-traveling-on-the-asphalt-road-around-line-of-trees-in-rural-landscape-at-sunset.jpg?s=612x612&w=0&k=20&c=NLXHp8-e5glAM7t-30Flvcl8R0S_ch8cE5gKghfFbVI="
           alt="Bus travel"
@@ -18,10 +21,25 @@ function Home() {
             Find a Bus
           </Link>
         </div>
-      </section>
-
+        
+      </section> */}
+      <br />
+        <div className="text-center mt-10 px-4">
+          <h1 className="text-4xl md:text-6xl font-bold text-balance mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
+              {"Book Your Perfect"}
+              <span className="text-primary"> Bus Journey</span>
+              <div className="text-lg md:text-xl font-normal text-muted-foreground mt-2">
+                Powered by Advanced Future & Technology
+              </div>
+            </h1>
+            <p className="text-xl text-muted-foreground text-balance max-w-2xl mx-auto mb-8">
+              {
+                "Experience next-generation bus booking with recommendations, real-time tracking and neural network optimization. Over 1000+ routes across the country."
+              }
+            </p>
+        </div>
       {/* Features Section */}
-      <section className="features">
+      {/* <section className="features">
         <h2>Why Travel With Us?</h2>
         <div className="feature-cards">
           <div className="card">
@@ -40,14 +58,37 @@ function Home() {
             <p>Pick your seat and get instant e-tickets with QR codes.</p>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Call to Action */}
       <section className="cta">
         <h2>Ready to Start Your Journey?</h2>
-        <Link to="/ticket" className="cta-button">
-          Book Now
-        </Link>
+
+        <Button size="lg" variant="secondary" className="px-8" asChild>
+              <Link to="/ticket">Book Your Trip</Link>
+            </Button>
+      </section>
+      <WhyChooseUs />
+
+      {/* NEW SECTION ADDED HERE */}
+      <section className="py-16 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to Start Your Journey?</h2>
+          <p className="text-xl mb-8 opacity-90">Join millions of travelers who trust us for their bus booking needs</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" variant="secondary" className="px-8" asChild>
+              <Link to="/ticket">Book Your Trip</Link>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="px-8 border-white text-white hover:bg-white hover:text-primary bg-transparent"
+            >
+              Download Mobile App
+            </Button>
+            
+          </div>
+        </div>
       </section>
 
       {/* Inline CSS */}

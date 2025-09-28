@@ -1,69 +1,65 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
-import './AvailableSpote.jsx'
+import { useLocation, Link } from "react-router-dom";
+import Naveigator from "./Header/Naveigator";
 
 function TypeOfBuss() {
   const location = useLocation();
-  const { from, to, date, time, image } = location.state || {};
+  const { from, to, date, time, image, returnDate, returnTime, routes, isRoundTrip, isMultiCity } = location.state || {};
 
   const [selectedBus, setSelectedBus] = useState(null);
-  const [name, setName] = useState("");
-  const [basePrice, setBasePrice] = useState(0);
   const [passengers, setPassengers] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const types = [
     {
       id: 1,
       name: "Selam Bus",
-      description:
-        "Comfortable Seating: Buses feature 2x2 reclining seats with ample legroom for a relaxing journey.",
+      description: "Comfortable Seating: Buses feature 2x2 reclining seats with ample legroom for a relaxing journey.",
       print: 800,
-      image:
-        "https://image.made-in-china.com/202f0j00NnUhFpCalKqc/Cheap-Used-Yellow-Yutong-Bus-Car-6122-and-40-Seats-Used-Coach-Tourist-Bus.webp",
+      image: "https://image.made-in-china.com/202f0j00NnUhFpCalKqc/Cheap-Used-Yellow-Yutong-Bus-Car-6122-and-40-Seats-Used-Coach-Tourist-Bus.webp",
+      features: ["WiFi", "AC", "Entertainment", "USB Charging", "Snack Service"]
     },
     {
       id: 2,
       name: "Zemen Bus",
-      description:
-        "Comfortable Seating: Buses feature 2x2 reclining seats with ample legroom for a relaxing journey.",
+      description: "Premium comfort with extra legroom and premium amenities for business travelers.",
       print: 900,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9fQLF3FWfBaB9A5o_H6Jts7X_hMN9K0LxPw&s",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9fQLF3FWfBaB9A5o_H6Jts7X_hMN9K0LxPw&s",
+      features: ["WiFi", "AC", "Premium Seats", "USB Charging", "Meal Service"]
     },
     {
       id: 3,
       name: "Sky Bus",
-      description:
-        "Comfortable Seating: Buses feature 2x2 reclining seats with ample legroom for a relaxing journey.",
+      description: "Economical option with comfortable seating and essential amenities for budget travelers.",
       print: 750,
-      image:
-        "https://img.12go.asia/0/fit/0/320/ce/0/plain/s3://12go-web-static/static/images/operator/13152/class/29-outside.jpg",
+      image: "https://img.12go.asia/0/fit/0/320/ce/0/plain/s3://12go-web-static/static/images/operator/13152/class/29-outside.jpg",
+      features: ["WiFi", "AC", "Comfortable", "Restroom", "Water Service"]
     },
     {
       id: 4,
       name: "Golden Bus",
-      description:
-        "Comfortable Seating: Buses feature 2x2 reclining seats with ample legroom for a relaxing journey.",
+      description: "Family-friendly buses with spacious seating and entertainment options for all ages.",
       print: 630,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0sYLsr8S0vi9NJMXBuvBd1vMMSnWMuJNxIA&s",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0sYLsr8S0vi9NJMXBuvBd1vMMSnWMuJNxIA&s",
+      features: ["WiFi", "AC", "Family Seating", "Entertainment", "Snack Service"]
     },
     {
       id: 5,
       name: "Liyu Bus",
-      description:
-        "Comfortable Seating: Buses feature 2x2 reclining seats with ample legroom for a relaxing journey.",
+      description: "Luxury travel experience with premium amenities and exceptional service quality.",
       print: 850,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMrj-LwqW97gsz0WGOovX2huKspBl_apaFpA&s",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMrj-LwqW97gsz0WGOovX2huKspBl_apaFpA&s",
+      features: ["WiFi", "AC", "Luxury Seats", "Gourmet Meals", "Personal Service"]
     },
   ];
 
+  // Filter buses based on search term
+  const filteredBuses = types.filter(bus =>
+    bus.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const handleBusSelect = (bus) => {
     setSelectedBus(bus);
-    setName(bus.name);
-    setBasePrice(bus.print);
   };
 
   const handlePassengerChange = (e) => {
@@ -71,69 +67,185 @@ function TypeOfBuss() {
     setPassengers(value);
   };
 
-  const calculateTotalPrice = () => {
-    return basePrice * passengers;
-  };
-
   const calculateDiscountPrice = (price) => {
     return (price - 5) * passengers;
   };
 
+  const getJourneyType = () => {
+    if (isMultiCity) return "Multi-City Journey";
+    if (isRoundTrip) return "Round Trip";
+    return "One Way";
+  };
+
+  const getRouteDescription = () => {
+    if (isMultiCity && routes) {
+      return `${routes[0].from} → ${routes[routes.length - 1].to} (${routes.length} stops)`;
+    }
+    if (isRoundTrip) {
+      return `${from} ↔ ${to}`;
+    }
+    return `${from} → ${to}`;
+  };
+
   return (
-    <div className="type-of-buss-container">
-      {/* Header Section */}
-      <section className="header">
-        <div className="header-image-container">
-          <img src={image} alt={`Journey from ${from} to ${to}`} className="header-image" />
-          <div className="image-overlay"></div>
-          <div className="header-content">
-            <h1>Select Your Bus Type</h1>
-            <p>Choose the perfect bus for your journey from {from} to {to}</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      
+      
+      {/* Hero Section */}
+      <section className="relative py-16 px-4">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+        <div className="relative max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-5xl font-bold text-gray-900 mb-4">
+              Select Your Bus Type
+            </h1>
+            <p className="text-xl text-gray-600 max-w-6xl mx-auto">
+              Choose the perfect bus for your {getJourneyType().toLowerCase()}. Compare amenities and prices to find your ideal travel experience.
+            </p>
           </div>
-        </div>
-        
-        {/* Trip Details */}
-        <div className="trip-details-container">
-          <div className="trip-details">
-            <div className="detail-item">
-              <span className="detail-label">From:</span>
-              <span className="detail-value">{from}</span>
+
+          {/* Journey Details Card */}
+          <div className="bg-white rounded-3xl shadow-2xl p-8 mb-12 border border-gray-100">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              
+              {/* Journey Type Badge */}
+              <div className="lg:col-span-12 mb-6">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-semibold">
+                  {getJourneyType()}
+                </div>
+              </div>
+
+              {/* Route Description */}
+              <div className="lg:col-span-3">
+                <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                  Route
+                </label>
+                <div className="relative">
+                  <div className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl bg-gray-50">
+                    <span className="text-lg font-semibold text-gray-900">{getRouteDescription()}</span>
+                  </div>
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Departure Details */}
+              <div className="lg:col-span-3">
+                <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  Departure
+                </label>
+                <div className="relative">
+                  <div className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl bg-gray-50">
+                    <span className="text-sm font-medium text-gray-900">{date} at {time}</span>
+                  </div>
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Return Details (if round trip) */}
+              {isRoundTrip && returnDate && (
+                <div className="lg:col-span-3">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                    Return
+                  </label>
+                  <div className="relative">
+                    <div className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl bg-gray-50">
+                      <span className="text-sm font-medium text-gray-900">{returnDate} at {returnTime}</span>
+                    </div>
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Passenger Selection */}
+              <div className="lg:col-span-3">
+                <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                  Passengers
+                </label>
+                <div className="relative">
+                  <div className="flex items-center gap-3 bg-white border-2 border-gray-200 rounded-xl p-1">
+                    <button 
+  onClick={() => setPassengers(Math.max(1, passengers - 1))}
+  className="w-12 h-12 bg-gradient-to-r from-pink-500 to-pink-400 text-white 
+             rounded-lg flex items-center justify-center 
+             hover:from-pink-300 hover:to-pink-500 
+             transition-all duration-200 shadow-md hover:shadow-lg"
+>
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+  </svg>
+</button>
+
+<input
+  type="number"
+  min="1"
+  value={passengers}
+  onChange={handlePassengerChange}
+  className="w-20 text-center p-3 border-2 border-blue-200 rounded-lg 
+             font-bold text-lg text-gray-900 
+             focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
+             transition-all duration-200"
+/>
+
+<button 
+  onClick={() => setPassengers(passengers + 1)}
+  className="w-12 h-12 bg-gradient-to-r from-blue-800 to-blue-500 text-white 
+             rounded-lg flex items-center justify-center 
+             hover:from-blue-400 hover:to-blue-600 
+             transition-all duration-200 shadow-md hover:shadow-lg"
+>
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+  </svg>
+</button>
+
+
+                  </div>
+                </div>
+              </div>
+
             </div>
-            <div className="detail-item">
-              <span className="detail-label">To:</span>
-              <span className="detail-value">{to}</span>
-            </div>
-            <div className="detail-item">
-              <span className="detail-label">Date:</span>
-              <span className="detail-value">{date}</span>
-            </div>
-            <div className="detail-item">
-              <span className="detail-label">Time:</span>
-              <span className="detail-value">{time}</span>
-            </div>
-            <div className="detail-item">
-              <span className="detail-label">Passengers:</span>
-              <div className="passenger-controls">
-                <button 
-                  onClick={() => setPassengers(Math.max(1, passengers - 1))}
-                  className="passenger-btn"
-                >
-                  -
-                </button>
+
+            {/* Search Bar */}
+            <div className="mt-8 max-w-md mx-auto">
+              <div className="relative">
                 <input
-                  id="passengers"
-                  type="number"
-                  min="1"
-                  value={passengers}
-                  onChange={handlePassengerChange}
-                  className="passenger-input"
+                  type="text"
+                  placeholder="Search buses by name..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full p-4 pl-12 pr-4 border-2 border-blue-200 rounded-2xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 shadow-sm"
                 />
-                <button 
-                  onClick={() => setPassengers(passengers + 1)}
-                  className="passenger-btn"
-                >
-                  +
-                </button>
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -141,444 +253,183 @@ function TypeOfBuss() {
       </section>
 
       {/* Bus Selection Section */}
-      <section className="bus-selection">
-        <h2>Available Bus Types</h2>
-        <div className="passenger-notice">
-          <p>Prices shown are for {passengers} {passengers === 1 ? 'passenger' : 'passengers'}</p>
-        </div>
-        <div className="bus-grid">
-          {types.map((bus) => (
-            <div 
-              key={bus.id} 
-              className={`bus-card ${selectedBus?.id === bus.id ? 'selected' : ''}`}
-              onClick={() => handleBusSelect(bus)}
-            >
-              <div className="bus-image-container">
-                <img src={bus.image} alt={bus.name} className="bus-image" />
-                <div className="bus-type-badge">{bus.name}</div>
-              </div>
-              <div className="bus-content">
-                <h3>{bus.name}</h3>
-                <p className="bus-description">{bus.description}</p>
-                <div className="bus-features">
-                  <span className="feature">WiFi</span>
-                  <span className="feature">AC</span>
-                  <span className="feature">Comfortable</span>
-                </div>
-                <div className="price-container">
-                  <p className="bus-price">Price: {calculateDiscountPrice(bus.print)} ETB</p>
-                  <p className="original-price">{bus.print * passengers} ETB</p>
-                  <p className="per-person">({bus.print - 5} ETB per person)</p>
-                </div>
-        <Link 
-  to='/AvailableSpots'
-  state={{
-    from,
-    to,
-    date,
-    time,
-    image,
-    price: calculateDiscountPrice(bus.print),
-    busImage: bus.image,
-    passengers,
-    busName: bus.name,
-  }}>
-  <button className="select-button">
-    {selectedBus?.id === bus.id ? 'Selected' : 'Select Bus'}
-  </button>
-</Link>
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Available Bus Types
+            </h2>
+            <p className="text-gray-600">
+              {filteredBuses.length} bus{filteredBuses.length !== 1 ? 'es' : ''} found • Prices for {passengers} {passengers === 1 ? 'passenger' : 'passengers'}
+            </p>
+          </div>
 
+          {/* Bus Grid */}
+          {filteredBuses.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-gray-400 text-6xl mb-4">🚌</div>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">No buses found</h3>
+              <p className="text-gray-500">Try adjusting your search criteria</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredBuses.map((bus) => (
+                <div 
+                  key={bus.id} 
+                  className={`bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-2 ${
+                    selectedBus?.id === bus.id ? 'border-blue-500' : 'border-gray-100'
+                  } overflow-hidden`}
+                >
+                  <div className="relative">
+                    <img
+                      src={bus.image}
+                      alt={bus.name}
+                      className="w-full h-48 object-cover"
+                      onError={(e) => {
+                        e.target.src = "https://via.placeholder.com/800x200?text=Bus+Image+Not+Available";
+                      }}
+                    />
+                    <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      {bus.name}
+                    </div>
+                  </div>
+                  
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">
+                      {bus.name}
+                    </h3>
+                    
+                    <p className="text-gray-600 mb-4 leading-relaxed">
+                      {bus.description}
+                    </p>
+                    
+                    {/* Features */}
+                    <div className="mb-6">
+                      <div className="flex flex-wrap gap-2">
+                        {bus.features.map((feature, index) => (
+                          <span key={index} className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded">
+                            {feature}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Pricing */}
+                    <div className="mb-6">
+                      <div className="flex items-baseline gap-2 mb-2">
+                        <span className="text-2xl font-bold text-green-600">
+                          ETB {calculateDiscountPrice(bus.print).toLocaleString()}
+                        </span>
+                        <span className="text-lg text-gray-500 line-through">
+                          ETB {(bus.print * passengers).toLocaleString()}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        ETB {bus.print - 5} per passenger
+                      </p>
+                    </div>
+                    
+                    {/* Select Button */}
+                    <Link
+                      to='/AvailableSpots'
+                      state={{
+                        from,
+                        to,
+                        date,
+                        time,
+                        image,
+                        returnDate,
+                        returnTime,
+                        routes,
+                        isRoundTrip,
+                        isMultiCity,
+                        price: calculateDiscountPrice(bus.print),
+                        busImage: bus.image,
+                        passengers,
+                        busName: bus.name,
+                      }}
+                    >
+                      <button 
+                        className={`w-full py-3 px-4 rounded-xl font-semibold transition-all duration-200 ${
+                          selectedBus?.id === bus.id 
+                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                            : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
+                        }`}
+                        onClick={() => handleBusSelect(bus)}
+                      >
+                        {selectedBus?.id === bus.id ? 'Selected' : 'Select Bus'}
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Selection Summary */}
+          {selectedBus && (
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg">
+              <div className="max-w-6xl mx-auto px-4 py-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Selected: {selectedBus.name}
+                    </h3>
+                    <p className="text-gray-600">
+                      Total: ETB {calculateDiscountPrice(selectedBus.print).toLocaleString()} for {passengers} {passengers === 1 ? 'passenger' : 'passengers'}
+                    </p>
+                  </div>
+                  <Link
+                    to='/AvailableSpots'
+                    state={{
+                      from,
+                      to,
+                      date,
+                      time,
+                      image,
+                      returnDate,
+                      returnTime,
+                      routes,
+                      isRoundTrip,
+                      isMultiCity,
+                      price: calculateDiscountPrice(selectedBus.print),
+                      busImage: selectedBus.image,
+                      passengers,
+                      busName: selectedBus.name,
+                    }}
+                  >
+                    <button className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-8 py-3 rounded-xl font-semibold hover:from-green-600 hover:to-blue-600 transition-all duration-200">
+                      Continue to Seat Selection
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
-          ))}
+          )}
         </div>
       </section>
 
-      {/* {selectedBus && (
-        <div className="selection-summary">
-          <div className="summary-content">
-            <div className="selected-info">
-              <h3>You selected: {name}</h3>
-              <p className="selected-price">Total Price: {calculateTotalPrice()} ETB</p>
-              <p className="passenger-count">For {passengers} {passengers === 1 ? 'passenger' : 'passengers'}</p>
-            </div>
-            <button className="continue-button">Continue to Payment</button>
-          </div>
-        </div>
-      )} */}
-
-      {/* Inline CSS */}
-      <style>
-        {`
-          body {
-            margin: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #f8fafc;
-          }
-
-          /* Header Section */
-          .type-of-buss-container .header {
-            position: relative;
-          }
-          .header-image-container {
-            position: relative;
-            width: 100%;
-            height: 300px;
-            overflow: hidden;
-          }
-          .header-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
-          .image-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
-          }
-          .header-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: white;
-            z-index: 2;
-            width: 90%;
-          }
-          .header-content h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-          }
-          .header-content p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-          }
-          
-          /* Trip Details */
-          .trip-details-container {
-            background: linear-gradient(45deg, #2563eb, #3b82f6);
-            color: white;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          }
-          .trip-details {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1.5rem;
-            max-width: 900px;
-            margin: 0 auto;
-          }
-          .detail-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 120px;
-          }
-          .detail-label {
-            font-size: 0.9rem;
-            color: white;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-          }
-          .detail-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-          }
-          .passenger-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-          }
-          .passenger-btn {
-            background: linear-gradient(45deg, #10b981, #34d399);
-            color: white;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 1.4rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-          }
-          .passenger-btn:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(45deg, #34d399, #10b981);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-          }
-          .passenger-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          }
-          .passenger-input {
-            width: 60px;
-            text-align: center;
-            padding: 8px;
-            border: 2px solid #3b82f6;
-            border-radius: 8px;
-            background: white;
-            color: #1e293b;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-          }
-          .passenger-input:focus {
-            outline: none;
-            border-color: #10b981;
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
-          }
-          .passenger-input::-webkit-outer-spin-button,
-          .passenger-input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-          }
-
-          /* Bus Selection Section */
-          .bus-selection {
-            padding: 40px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-          }
-          .bus-selection h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1e293b;
-            text-align: center;
-            margin-bottom: 1rem;
-          }
-          .passenger-notice {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: #64748b;
-            font-style: italic;
-          }
-          .bus-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-          }
-          .bus-card {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            cursor: pointer;
-          }
-          .bus-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-          }
-          .bus-card.selected {
-            border: 2px solid #3b82f6;
-            transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
-          }
-          .bus-image-container {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-          }
-          .bus-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-          }
-          .bus-card:hover .bus-image {
-            transform: scale(1.05);
-          }
-          .bus-type-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(59, 130, 246, 0.9);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-          }
-          .bus-content {
-            padding: 1.5rem;
-          }
-          .bus-content h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 0.75rem;
-          }
-          .bus-description {
-            font-size: 0.95rem;
-            color: #64748b;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-          }
-          .bus-features {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-          }
-          .feature {
-            background: #eef2ff;
-            color: #4f46e5;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 500;
-          }
-          .price-container {
-            margin-bottom: 1rem;
-          }
-          .bus-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #10b981;
-            margin: 0 0 0.25rem 0;
-          }
-          .original-price {
-            font-size: 1rem;
-            color: #94a3b8;
-            text-decoration: line-through;
-            margin: 0;
-          }
-          .per-person {
-            font-size: 0.8rem;
-            color: #64748b;
-            margin: 0.25rem 0 0 0;
-          }
-          .select-button {
-            width: 100%;
-            background: linear-gradient(45deg, #10b981, #34d399);
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-          }
-          .select-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-          }
-          .bus-card.selected .select-button {
-            background: linear-gradient(45deg, #3b82f6, #2563eb);
-          }
-
-          /* Selection Summary */
-          .selection-summary {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            padding: 1.5rem;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-            z-index: 100;
-          }
-          .summary-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-          }
-          .selected-info h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1e293b;
-            margin: 0 0 0.5rem 0;
-          }
-          .selected-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #10b981;
-            margin: 0 0 0.25rem 0;
-          }
-          .passenger-count {
-            font-size: 0.9rem;
-            color: #64748b;
-            margin: 0;
-          }
-          .continue-button {
-            background: linear-gradient(45deg, #f59e0b, #f97316);
-            color: white;
-            padding: 14px 28px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-          }
-          .continue-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-          }
-
-          /* Responsive Design */
-          @media (max-width: 768px) {
-            .header-content h1 {
-              font-size: 2rem;
-            }
-            .header-content p {
-              font-size: 1.1rem;
-            }
-            .header-image-container {
-              height: 250px;
-            }
-            .trip-details {
-              flex-direction: column;
-              gap: 1rem;
-            }
-            .detail-item {
-              flex-direction: row;
-              justify-content: space-between;
-              width: 100%;
-            }
-            .bus-grid {
-              grid-template-columns: 1fr;
-              gap: 1.5rem;
-            }
-            .summary-content {
-              flex-direction: column;
-              gap: 1rem;
-              text-align: center;
-            }
-          }
-          @media (max-width: 480px) {
-            .header-image-container {
-              height: 200px;
-            }
-            .bus-content {
-              padding: 1rem;
-            }
-            .continue-button {
-              padding: 12px 24px;
-              font-size: 0.9rem;
-            }
-            .bus-selection {
-              padding: 30px 15px;
-            }
-          }
-        `}
-      </style>
+      {/* Additional Styles */}
+      <style jsx>{`
+        select {
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+          background-position: right 1rem center;
+          background-repeat: no-repeat;
+          background-size: 1.5em 1.5em;
+          padding-right: 2.5rem;
+          -webkit-print-color-adjust: exact;
+        }
+        
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        
+        input[type="number"] {
+          -moz-appearance: textfield;
+        }
+      `}</style>
     </div>
   );
 }

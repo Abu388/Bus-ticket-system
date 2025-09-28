@@ -1,90 +1,119 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Naveigator from "./Header/Naveigator";
-
-// Dummy data for destinations
-const destinations = [
+import Naveigator from "@/Header/Naveigator";
+// Dummy data for round-trip destinations
+const roundTripDestinations = [
   {
     id: 1,
     from: "Addis Ababa",
     to: "Gondar",
-    description: "The vibrant capital city to historic Gondar.",
-    times: ["08:00 AM", "12:00 PM", "06:00 PM"],
+    description: "Round-trip from the vibrant capital city to historic Gondar and back.",
+    departureTimes: ["08:00 AM", "12:00 PM", "06:00 PM"],
+    returnTimes: ["06:00 AM", "02:00 PM", "08:00 PM"],
     availableDates: ["2025-09-20", "2025-09-21", "2025-09-22"],
+    returnDates: ["2025-09-21", "2025-09-22", "2025-09-23"],
     image: "https://imgix.brilliant-ethiopia.com/fasil-ghebbi-royal-enclosure-gondar.jpg?auto=format,enhance,compress&fit=crop&crop=entropy,faces,focalpoint&w=580&h=480&q=40",
   },
   {
     id: 2,
     from: "Bahir Dar",
     to: "Addis Ababa",
-    description: "From stunning Lake Tana to the capital city.",
-    times: ["07:00 AM", "01:00 PM", "05:00 PM"],
+    description: "Round-trip from stunning Lake Tana to the capital city and back.",
+    departureTimes: ["07:00 AM", "01:00 PM", "05:00 PM"],
+    returnTimes: ["06:00 AM", "12:00 PM", "04:00 PM"],
     availableDates: ["2025-09-20", "2025-09-23", "2025-09-24"],
+    returnDates: ["2025-09-21", "2025-09-24", "2025-09-25"],
     image: "https://cdn.atrsafari.com/cdn/05explore/locations-and-lodges/africa/ethiopia/addis-ababa/0/stills/00page/01ADDI-IM0001-addis-ababa.jpg",
   },
   {
     id: 3,
     from: "Gondar",
     to: "Lalibela",
-    description: "From historic castles to rock-hewn churches.",
-    times: ["09:00 AM", "02:00 PM"],
+    description: "Round-trip from historic castles to rock-hewn churches and back.",
+    departureTimes: ["09:00 AM", "02:00 PM"],
+    returnTimes: ["08:00 AM", "03:00 PM"],
     availableDates: ["2025-09-21", "2025-09-22"],
+    returnDates: ["2025-09-22", "2025-09-23"],
     image: "https://media-cdn.tripadvisor.com/media/photo-s/1a/fa/c9/84/the-rock-hewn-churches.jpg",
   },
   {
     id: 4,
     from: "Hawassa",
     to: "Arba Minch",
-    description: "From serene Lake Hawassa to beautiful Arba Minch.",
-    times: ["06:00 AM", "11:00 AM", "04:00 PM"],
+    description: "Round-trip from serene Lake Hawassa to beautiful Arba Minch and back.",
+    departureTimes: ["06:00 AM", "11:00 AM", "04:00 PM"],
+    returnTimes: ["07:00 AM", "12:00 PM", "05:00 PM"],
     availableDates: ["2025-09-20", "2025-09-23", "2025-09-25"],
+    returnDates: ["2025-09-21", "2025-09-24", "2025-09-26"],
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQl53snccJCGWDKGLfbyHzgj31SwGuOlnGYkQ&s",
   },
   {
     id: 5,
     from: "Lalibela",
     to: "Axum",
-    description: "From UNESCO rock-hewn churches to ancient Axum.",
-    times: ["10:00 AM", "03:00 PM"],
+    description: "Round-trip from UNESCO rock-hewn churches to ancient Axum and back.",
+    departureTimes: ["10:00 AM", "03:00 PM"],
+    returnTimes: ["09:00 AM", "04:00 PM"],
     availableDates: ["2025-09-22", "2025-09-24"],
+    returnDates: ["2025-09-23", "2025-09-25"],
     image: "https://cdn.britannica.com/23/93423-050-107B2836/obelisk-kingdom-Aksum-Ethiopian-name-city.jpg",
   },
 ];
 
-function Ticket() {
+function RoundTrip() {
   const [searchTerm, setSearchTerm] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [time, setTime] = useState("");
-  const [date, setDate] = useState("");
+  const [departureTime, setDepartureTime] = useState("");
+  const [returnTime, setReturnTime] = useState("");
+  const [departureDate, setDepartureDate] = useState("");
+  const [returnDate, setReturnDate] = useState("");
   const [passengers, setPassengers] = useState("1");
 
-  const cities = [...new Set(destinations.flatMap((dest) => [dest.from, dest.to]))];
+  const cities = [...new Set(roundTripDestinations.flatMap((dest) => [dest.from, dest.to]))];
   const passengerOptions = [1, 2, 3, 4, 5, 6];
 
-  // Available times based on selection
-  const availableTimes = from && to && date
-    ? destinations
-        .filter((dest) => dest.from === from && dest.to === to && dest.availableDates.includes(date))
-        .flatMap((dest) => dest.times)
-    : [...new Set(destinations.flatMap((dest) => dest.times))];
+  // Available departure times based on selection
+  const availableDepartureTimes = from && to && departureDate
+    ? roundTripDestinations
+        .filter((dest) => dest.from === from && dest.to === to && dest.availableDates.includes(departureDate))
+        .flatMap((dest) => dest.departureTimes)
+    : [...new Set(roundTripDestinations.flatMap((dest) => dest.departureTimes))];
 
-  // Available dates based on selection
-  const availableDates = from && to
-    ? destinations
+  // Available return times based on selection
+  const availableReturnTimes = from && to && returnDate
+    ? roundTripDestinations
+        .filter((dest) => dest.from === from && dest.to === to && dest.returnDates.includes(returnDate))
+        .flatMap((dest) => dest.returnTimes)
+    : [...new Set(roundTripDestinations.flatMap((dest) => dest.returnTimes))];
+
+  // Available departure dates based on selection
+  const availableDepartureDates = from && to
+    ? roundTripDestinations
         .filter((dest) => dest.from === from && dest.to === to)
         .flatMap((dest) => dest.availableDates)
-    : [...new Set(destinations.flatMap((dest) => dest.availableDates))];
+    : [...new Set(roundTripDestinations.flatMap((dest) => dest.availableDates))];
+
+  // Available return dates based on selection
+  const availableReturnDates = from && to && departureDate
+    ? roundTripDestinations
+        .filter((dest) => dest.from === from && dest.to === to)
+        .flatMap((dest) => dest.returnDates.filter(rd => rd > departureDate)) // Only show return dates after departure
+    : [...new Set(roundTripDestinations.flatMap((dest) => dest.returnDates))];
 
   // Filter destinations
-  const filteredDestinations = destinations.filter((dest) => {
+  const filteredDestinations = roundTripDestinations.filter((dest) => {
     const matchesSearch = dest.from.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          dest.to.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFrom = from ? dest.from === from : true;
     const matchesTo = to ? dest.to === to : true;
-    const matchesTime = time ? dest.times.includes(time) : true;
-    const matchesDate = date ? dest.availableDates.includes(date) : true;
-    return matchesSearch && matchesFrom && matchesTo && matchesTime && matchesDate;
+    const matchesDepartureTime = departureTime ? dest.departureTimes.includes(departureTime) : true;
+    const matchesReturnTime = returnTime ? dest.returnTimes.includes(returnTime) : true;
+    const matchesDepartureDate = departureDate ? dest.availableDates.includes(departureDate) : true;
+    const matchesReturnDate = returnDate ? dest.returnDates.includes(returnDate) : true;
+    
+    return matchesSearch && matchesFrom && matchesTo && matchesDepartureTime && 
+           matchesReturnTime && matchesDepartureDate && matchesReturnDate;
   });
 
   const handleImageError = (e) => {
@@ -101,10 +130,10 @@ function Ticket() {
         <div className="relative max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-5xl font-bold text-gray-900 mb-4">
-              Discover Amazing Destinations
+              Round-Trip Adventures
             </h1>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-              Book your perfect journey with ease. Explore Ethiopia's beautiful routes with our premium bus services.
+            <p className="text-xl text-gray-600 max-w-6xl mx-auto">
+              Book your complete journey with ease. Enjoy seamless round-trip travel across Ethiopia's beautiful routes.
             </p>
           </div>
 
@@ -124,8 +153,10 @@ function Ticket() {
                     onChange={(e) => {
                       setFrom(e.target.value);
                       setTo("");
-                      setTime("");
-                      setDate("");
+                      setDepartureTime("");
+                      setReturnTime("");
+                      setDepartureDate("");
+                      setReturnDate("");
                     }}
                     className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 appearance-none bg-white"
                   >
@@ -154,8 +185,10 @@ function Ticket() {
                     value={to}
                     onChange={(e) => {
                       setTo(e.target.value);
-                      setTime("");
-                      setDate("");
+                      setDepartureTime("");
+                      setReturnTime("");
+                      setDepartureDate("");
+                      setReturnDate("");
                     }}
                     className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 appearance-none bg-white"
                   >
@@ -173,23 +206,25 @@ function Ticket() {
                 </div>
               </div>
 
-              {/* Date */}
+              {/* Departure Date */}
               <div className="lg:col-span-2">
                 <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                   <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                  Date
+                  Departure Date
                 </label>
                 <div className="relative">
                   <select
-                    value={date}
+                    value={departureDate}
                     onChange={(e) => {
-                      setDate(e.target.value);
-                      setTime("");
+                      setDepartureDate(e.target.value);
+                      setDepartureTime("");
+                      setReturnDate("");
+                      setReturnTime("");
                     }}
                     className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 appearance-none bg-white"
                   >
                     <option value="">Select date</option>
-                    {availableDates.map((d) => (
+                    {availableDepartureDates.map((d) => (
                       <option key={d} value={d}>{d}</option>
                     ))}
                   </select>
@@ -201,20 +236,48 @@ function Ticket() {
                 </div>
               </div>
 
-              {/* Time */}
+              {/* Return Date */}
               <div className="lg:col-span-2">
                 <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                   <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-                  Time
+                  Return Date
                 </label>
                 <div className="relative">
                   <select
-                    value={time}
-                    onChange={(e) => setTime(e.target.value)}
+                    value={returnDate}
+                    onChange={(e) => {
+                      setReturnDate(e.target.value);
+                      setReturnTime("");
+                    }}
                     className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-200 appearance-none bg-white"
                   >
+                    <option value="">Select date</option>
+                    {availableReturnDates.map((d) => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Departure Time */}
+              <div className="lg:col-span-3">
+                <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                  Departure Time
+                </label>
+                <div className="relative">
+                  <select
+                    value={departureTime}
+                    onChange={(e) => setDepartureTime(e.target.value)}
+                    className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200 appearance-none bg-white"
+                  >
                     <option value="">Select time</option>
-                    {availableTimes.map((t) => (
+                    {availableDepartureTimes.map((t) => (
                       <option key={t} value={t}>{t}</option>
                     ))}
                   </select>
@@ -226,32 +289,50 @@ function Ticket() {
                 </div>
               </div>
 
+              {/* Return Time */}
+              <div className="lg:col-span-3">
+                <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                  Return Time
+                </label>
+                <div className="relative">
+                  <select
+                    value={returnTime}
+                    onChange={(e) => setReturnTime(e.target.value)}
+                    className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 appearance-none bg-white"
+                  >
+                    <option value="">Select time</option>
+                    {availableReturnTimes.map((t) => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
 
             </div>
             <br />
+            
             {/* Search Bar */}
-          <div className="max-w-md mx-auto mb-12">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search destinations..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full p-4 pl-12 pr-4 border-2 border-blue-200 rounded-2xl focus:border-blue-800 focus:ring-2 focus:ring-blue-200 transition-all duration-200 shadow-sm"
-              />
-              <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+            <div className="max-w-md mx-auto mb-6">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search round-trip destinations..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full p-4 pl-12 pr-4 border-2 border-blue-200 rounded-2xl focus:border-blue-800 focus:ring-2 focus:ring-blue-200 transition-all duration-200 shadow-sm"
+                />
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
               </div>
-            </div>
-          </div>
-
-            {/* Search Button */}
-            <div className="mt-8 flex justify-center">
-              
-
-
             </div>
           </div>
         </div>
@@ -261,14 +342,11 @@ function Ticket() {
       <section className="py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           
-
-          
-
           {/* Destination Grid */}
           {filteredDestinations.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-400 text-6xl mb-4">🚌</div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">No destinations found</h3>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">No round-trip destinations found</h3>
               <p className="text-gray-500">Try adjusting your search criteria</p>
             </div>
           ) : (
@@ -278,17 +356,19 @@ function Ticket() {
                   <div className="relative">
                     <img
                       src={dest.image}
-                      alt={`${dest.from} to ${dest.to}`}
+                      alt={`${dest.from} to ${dest.to} round-trip`}
                       className="w-full h-48 object-cover"
                       onError={handleImageError}
                     />
-                    
+                    <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      Round Trip
+                    </div>
                   </div>
                   
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-xl font-bold text-gray-900">
-                        {dest.from} → {dest.to}
+                        {dest.from} ↔ {dest.to}
                       </h3>
                     </div>
                     
@@ -296,37 +376,45 @@ function Ticket() {
                       {dest.description}
                     </p>
                     
-                    <div className="space-y-2 mb-6">
+                    <div className="space-y-3 mb-6">
                       <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span>Available: {dest.times.join(", ")}</span>
+                        <span><strong>Departure:</strong> {dest.departureTimes.join(", ")}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span><strong>Return:</strong> {dest.returnTimes.join(", ")}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        <span>Dates: {dest.availableDates.join(", ")}</span>
+                        <span><strong>Available Dates:</strong> {dest.availableDates.join(", ")}</span>
                       </div>
                     </div>
                     
                     <div className="flex items-center justify-between">
-                      
                       <Link
                         to="/TypeOfBuss"
                         state={{
                           from: dest.from,
                           to: dest.to,
-                          date: date || dest.availableDates[0],
-                          time: time || dest.times[0],
+                          date: departureDate || dest.availableDates[0],
+                          time: departureTime || dest.departureTimes[0],
+                          returnDate: returnDate || dest.returnDates[0],
+                          returnTime: returnTime || dest.returnTimes[0],
                           image: dest.image,
                           price: 0, // default, will be updated in TypeOfBus when a bus is selected
                           passengers: 1,
+                          isRoundTrip: true,
                         }}
                         className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-200 font-semibold"
                       >
-                        Book Now
+                        Book Round Trip
                       </Link>
                     </div>
                   </div>
@@ -352,4 +440,4 @@ function Ticket() {
   );
 }
 
-export default Ticket;
+export default RoundTrip;

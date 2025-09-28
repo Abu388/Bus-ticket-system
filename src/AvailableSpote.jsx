@@ -238,13 +238,7 @@ function AvailableSpots() {
 
 
         </form>
-        <Link to="/refund"   >
-          <button type="button" className="submit-button" >
-
-            Refund
-
-          </button>
-        </Link>
+        
       </section>
 
       {/* Booking Status Display */}

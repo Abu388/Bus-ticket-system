@@ -18,9 +18,9 @@ function Spot({onSeatsFetched}) {
           method: "GET",
           headers: {
             Authorization:
-              "Bearer 4m7jUlIQs5SlFjvz7CZiUpuBzgpgE5wGOfRmDWRF97777dd1",
+              "Bearer raDlONJUvN5ScbzVI7dHe3Ma9qPIji1piNEN1Pv62b5c7a66",
             "Content-Type": "application/json",
-          },
+          }, 
         }
       );
 
