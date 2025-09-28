@@ -3,6 +3,7 @@ import React from "react";
 import MultiCity from "@/ways/Multi-city";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import TypesOfBus from "@/Types/TypesOfBus";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -52,7 +53,7 @@ export function Header() {
                 <NavigationMenuContent>
                   <div className="grid gap-3 p-6 w-[400px]">
                     <NavigationMenuLink asChild>
-                      <Link to="/search" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-accent">
+                      <Link to="/types-of-bus" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-accent">
                         <MapPin className="h-5 w-5 text-primary" />
                         <div>
                           <div className="font-medium">Search Buses</div>

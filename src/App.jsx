@@ -17,7 +17,7 @@ import ManageBooking from './ManageBooking/ManageBooking'
 import Supervisor from './Admin/Supervisor.jsx';
 import {RefundProvider} from './Context/RefundContext.jsx';
 import TravelBooking from './ManageBooking/TravelBooking'
-
+import TypesOfBus from './Types/TypesOfBus'
 
 function App() {
   return (
@@ -41,6 +41,7 @@ function App() {
               <Route path="/manage-booking" element={<ManageBooking />} />
               <Route path="/supervisor" element={<Supervisor />} />
               <Route path="/travel-booking" element={<TravelBooking />} />
+              <Route path="/types-of-bus" element={<TypesOfBus />} />
               <Route path="*" element={<h1>404 Not Found</h1>} />
             </Routes>
           </main>

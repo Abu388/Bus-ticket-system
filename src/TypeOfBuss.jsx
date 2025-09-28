@@ -89,8 +89,8 @@ function TypeOfBuss() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      
-      
+
+
       {/* Hero Section */}
       <section className="relative py-16 px-4">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
@@ -107,7 +107,7 @@ function TypeOfBuss() {
           {/* Journey Details Card */}
           <div className="bg-white rounded-3xl shadow-2xl p-8 mb-12 border border-gray-100">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-              
+
               {/* Journey Type Badge */}
               <div className="lg:col-span-12 mb-6">
                 <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-semibold">
@@ -179,40 +179,40 @@ function TypeOfBuss() {
                 </label>
                 <div className="relative">
                   <div className="flex items-center gap-3 bg-white border-2 border-gray-200 rounded-xl p-1">
-                    <button 
-  onClick={() => setPassengers(Math.max(1, passengers - 1))}
-  className="w-12 h-12 bg-gradient-to-r from-pink-500 to-pink-400 text-white 
+                    <button
+                      onClick={() => setPassengers(Math.max(1, passengers - 1))}
+                      className="w-12 h-12 bg-gradient-to-r from-pink-500 to-pink-400 text-white 
              rounded-lg flex items-center justify-center 
              hover:from-pink-300 hover:to-pink-500 
              transition-all duration-200 shadow-md hover:shadow-lg"
->
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-  </svg>
-</button>
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                      </svg>
+                    </button>
 
-<input
-  type="number"
-  min="1"
-  value={passengers}
-  onChange={handlePassengerChange}
-  className="w-20 text-center p-3 border-2 border-blue-200 rounded-lg 
+                    <input
+                      type="number"
+                      min="1"
+                      value={passengers}
+                      onChange={handlePassengerChange}
+                      className="w-20 text-center p-3 border-2 border-blue-200 rounded-lg 
              font-bold text-lg text-gray-900 
              focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
              transition-all duration-200"
-/>
+                    />
 
-<button 
-  onClick={() => setPassengers(passengers + 1)}
-  className="w-12 h-12 bg-gradient-to-r from-blue-800 to-blue-500 text-white 
+                    <button
+                      onClick={() => setPassengers(passengers + 1)}
+                      className="w-12 h-12 bg-gradient-to-r from-blue-800 to-blue-500 text-white 
              rounded-lg flex items-center justify-center 
              hover:from-blue-400 hover:to-blue-600 
              transition-all duration-200 shadow-md hover:shadow-lg"
->
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-  </svg>
-</button>
+                    >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                    </button>
 
 
                   </div>
@@ -274,11 +274,10 @@ function TypeOfBuss() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredBuses.map((bus) => (
-                <div 
-                  key={bus.id} 
-                  className={`bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-2 ${
-                    selectedBus?.id === bus.id ? 'border-blue-500' : 'border-gray-100'
-                  } overflow-hidden`}
+                <div
+                  key={bus.id}
+                  className={`bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-2 ${selectedBus?.id === bus.id ? 'border-blue-500' : 'border-gray-100'
+                    } overflow-hidden`}
                 >
                   <div className="relative">
                     <img
@@ -293,16 +292,16 @@ function TypeOfBuss() {
                       {bus.name}
                     </div>
                   </div>
-                  
+
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-gray-900 mb-3">
                       {bus.name}
                     </h3>
-                    
+
                     <p className="text-gray-600 mb-4 leading-relaxed">
                       {bus.description}
                     </p>
-                    
+
                     {/* Features */}
                     <div className="mb-6">
                       <div className="flex flex-wrap gap-2">
@@ -313,7 +312,7 @@ function TypeOfBuss() {
                         ))}
                       </div>
                     </div>
-                    
+
                     {/* Pricing */}
                     <div className="mb-6">
                       <div className="flex items-baseline gap-2 mb-2">
@@ -328,7 +327,7 @@ function TypeOfBuss() {
                         ETB {bus.print - 5} per passenger
                       </p>
                     </div>
-                    
+
                     {/* Select Button */}
                     <Link
                       to='/AvailableSpots'
@@ -349,12 +348,11 @@ function TypeOfBuss() {
                         busName: bus.name,
                       }}
                     >
-                      <button 
-                        className={`w-full py-3 px-4 rounded-xl font-semibold transition-all duration-200 ${
-                          selectedBus?.id === bus.id 
+                      <button
+                        className={`w-full py-3 px-4 rounded-xl font-semibold transition-all duration-200 ${selectedBus?.id === bus.id
                             ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
                             : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
-                        }`}
+                          }`}
                         onClick={() => handleBusSelect(bus)}
                       >
                         {selectedBus?.id === bus.id ? 'Selected' : 'Select Bus'}
