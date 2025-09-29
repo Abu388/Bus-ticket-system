@@ -6,12 +6,12 @@ import Naveigator from "./Header/Naveigator";
 const destinations = [
   {
     id: 1,
-    from: "Addis Ababa, Gelan",
-    to: "Gondar",
+    from: "Hawassa, University Main Campus",
+    to: "Addis Ababa",
     description: "The vibrant capital city to historic Gondar.",
     times: ["08:00 AM", "12:00 PM", "06:00 PM"],
     availableDates: ["2025-09-20", "2025-09-21", "2025-09-22"],
-    image: "https://imgix.brilliant-ethiopia.com/fasil-ghebbi-royal-enclosure-gondar.jpg?auto=format,enhance,compress&fit=crop&crop=entropy,faces,focalpoint&w=580&h=480&q=40",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLAEBgwe-YsXExpRQBgMSR-DO5KsMwfY4X7w&s",
   },
   {
     id: 2,
@@ -33,8 +33,8 @@ const destinations = [
   },
   {
     id: 4,
-    from: "Hawassa",
-    to: "Arba Minch",
+    from: "Arba Minch",
+    to: "Hawassa",
     description: "From serene Lake Hawassa to beautiful Arba Minch.",
     times: ["06:00 AM", "11:00 AM", "04:00 PM"],
     availableDates: ["2025-09-20", "2025-09-23", "2025-09-25"],

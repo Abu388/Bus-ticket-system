@@ -6,15 +6,15 @@ import Naveigator from "@/Header/Naveigator";
 const roundTripDestinations = [
   {
     id: 1,
-    from: "Addis Ababa, Gelan",
-    to: "Gondar",
-    description: "Round-trip from the vibrant capital city to historic Gondar and back.",
+    from: "Hawassa, University Main Campus",
+    to: "Addis Ababa",
+    description: "Round-trip from the vibrant capital city to historic Addis Ababa and back.",
     departureTimes: ["08:00 AM", "12:00 PM", "06:00 PM"],
     returnTimes: ["06:00 AM", "02:00 PM", "08:00 PM"],
     availableDates: ["2025-09-20", "2025-09-21", "2025-09-22"],
     returnDates: ["2025-09-21", "2025-09-22", "2025-09-23"],
     image:
-      "https://imgix.brilliant-ethiopia.com/fasil-ghebbi-royal-enclosure-gondar.jpg?auto=format,enhance,compress&fit=crop&crop=entropy,faces,focalpoint&w=580&h=480&q=40",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLAEBgwe-YsXExpRQBgMSR-DO5KsMwfY4X7w&s",
   },
   {
     id: 2,
