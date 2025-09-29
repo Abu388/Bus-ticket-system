@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Naveigator from "@/Header/Naveigator";
 // Dummy data for round-trip destinations
+// Dummy data for round-trip destinations
 const roundTripDestinations = [
   {
     id: 1,
-    from: "Addis Ababa",
+    from: "Addis Ababa, Gelan",
     to: "Gondar",
     description: "Round-trip from the vibrant capital city to historic Gondar and back.",
     departureTimes: ["08:00 AM", "12:00 PM", "06:00 PM"],
     returnTimes: ["06:00 AM", "02:00 PM", "08:00 PM"],
     availableDates: ["2025-09-20", "2025-09-21", "2025-09-22"],
     returnDates: ["2025-09-21", "2025-09-22", "2025-09-23"],
-    image: "https://imgix.brilliant-ethiopia.com/fasil-ghebbi-royal-enclosure-gondar.jpg?auto=format,enhance,compress&fit=crop&crop=entropy,faces,focalpoint&w=580&h=480&q=40",
+    image:
+      "https://imgix.brilliant-ethiopia.com/fasil-ghebbi-royal-enclosure-gondar.jpg?auto=format,enhance,compress&fit=crop&crop=entropy,faces,focalpoint&w=580&h=480&q=40",
   },
   {
     id: 2,
@@ -23,7 +25,8 @@ const roundTripDestinations = [
     returnTimes: ["06:00 AM", "12:00 PM", "04:00 PM"],
     availableDates: ["2025-09-20", "2025-09-23", "2025-09-24"],
     returnDates: ["2025-09-21", "2025-09-24", "2025-09-25"],
-    image: "https://cdn.atrsafari.com/cdn/05explore/locations-and-lodges/africa/ethiopia/addis-ababa/0/stills/00page/01ADDI-IM0001-addis-ababa.jpg",
+    image:
+      "https://cdn.atrsafari.com/cdn/05explore/locations-and-lodges/africa/ethiopia/addis-ababa/0/stills/00page/01ADDI-IM0001-addis-ababa.jpg",
   },
   {
     id: 3,
@@ -34,31 +37,85 @@ const roundTripDestinations = [
     returnTimes: ["08:00 AM", "03:00 PM"],
     availableDates: ["2025-09-21", "2025-09-22"],
     returnDates: ["2025-09-22", "2025-09-23"],
-    image: "https://media-cdn.tripadvisor.com/media/photo-s/1a/fa/c9/84/the-rock-hewn-churches.jpg",
+    image:
+      "https://media-cdn.tripadvisor.com/media/photo-s/1a/fa/c9/84/the-rock-hewn-churches.jpg",
   },
   {
     id: 4,
     from: "Hawassa",
     to: "Arba Minch",
-    description: "Round-trip from serene Lake Hawassa to beautiful Arba Minch and back.",
+    description:
+      "Round-trip from serene Lake Hawassa to beautiful Arba Minch and back.",
     departureTimes: ["06:00 AM", "11:00 AM", "04:00 PM"],
     returnTimes: ["07:00 AM", "12:00 PM", "05:00 PM"],
     availableDates: ["2025-09-20", "2025-09-23", "2025-09-25"],
     returnDates: ["2025-09-21", "2025-09-24", "2025-09-26"],
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQl53snccJCGWDKGLfbyHzgj31SwGuOlnGYkQ&s",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQl53snccJCGWDKGLfbyHzgj31SwGuOlnGYkQ&s",
   },
   {
     id: 5,
     from: "Lalibela",
     to: "Axum",
-    description: "Round-trip from UNESCO rock-hewn churches to ancient Axum and back.",
+    description:
+      "Round-trip from UNESCO rock-hewn churches to ancient Axum and back.",
     departureTimes: ["10:00 AM", "03:00 PM"],
     returnTimes: ["09:00 AM", "04:00 PM"],
     availableDates: ["2025-09-22", "2025-09-24"],
     returnDates: ["2025-09-23", "2025-09-25"],
-    image: "https://cdn.britannica.com/23/93423-050-107B2836/obelisk-kingdom-Aksum-Ethiopian-name-city.jpg",
+    image:
+      "https://cdn.britannica.com/23/93423-050-107B2836/obelisk-kingdom-Aksum-Ethiopian-name-city.jpg",
+  },
+  {
+    id: 6,
+    from: "Addis Ababa, Lamberet",
+    to: "Gondar",
+    description: "Round-trip from Addis Ababa Lamberet to Gondar and back.",
+    departureTimes: ["08:00 AM", "12:00 PM", "06:00 PM"],
+    returnTimes: ["07:00 AM", "01:00 PM", "09:00 PM"],
+    availableDates: ["2025-09-20", "2025-09-21", "2025-09-22"],
+    returnDates: ["2025-09-21", "2025-09-22", "2025-09-23"],
+    image:
+      "https://imgix.brilliant-ethiopia.com/fasil-ghebbi-royal-enclosure-gondar.jpg?auto=format,enhance,compress&fit=crop&crop=entropy,faces,focalpoint&w=580&h=480&q=40",
+  },
+  {
+    id: 7,
+    from: "Hawassa, South Spring Hotel",
+    to: "Addis Ababa",
+    description: "Round-trip from Hawassa South Spring Hotel to Addis Ababa and back.",
+    departureTimes: ["08:00 AM", "12:00 PM", "06:00 PM"],
+    returnTimes: ["07:00 AM", "11:00 AM", "08:00 PM"],
+    availableDates: ["2025-09-20", "2025-09-21", "2025-09-22"],
+    returnDates: ["2025-09-21", "2025-09-22", "2025-09-23"],
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLAEBgwe-YsXExpRQBgMSR-DO5KsMwfY4X7w&s",
+  },
+  {
+    id: 8,
+    from: "Addis Ababa, UNISA",
+    to: "Hawassa",
+    description: "Round-trip from Addis Ababa UNISA to Hawassa and back.",
+    departureTimes: ["08:00 AM", "12:00 PM", "06:00 PM"],
+    returnTimes: ["07:00 AM", "01:00 PM", "09:00 PM"],
+    availableDates: ["2025-09-20", "2025-09-21", "2025-09-22"],
+    returnDates: ["2025-09-21", "2025-09-22", "2025-09-23"],
+    image:
+      "https://imgix.brilliant-ethiopia.com/fasil-ghebbi-royal-enclosure-gondar.jpg?auto=format,enhance,compress&fit=crop&crop=entropy,faces,focalpoint&w=580&h=480&q=40",
+  },
+  {
+    id: 9,
+    from: "Shashemene, Tantostia Hotel",
+    to: "Hawassa",
+    description: "Round-trip from Shashemene Tantostia Hotel to Hawassa and back.",
+    departureTimes: ["08:00 AM", "12:00 PM", "06:00 PM"],
+    returnTimes: ["09:00 AM", "01:00 PM", "07:00 PM"],
+    availableDates: ["2025-09-20", "2025-09-21", "2025-09-22"],
+    returnDates: ["2025-09-21", "2025-09-22", "2025-09-23"],
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd79WiCLQjPVjMVvzVxwRvr6kOcKZfq1hLAA&s",
   },
 ];
+
 
 function RoundTrip() {
   const [searchTerm, setSearchTerm] = useState("");

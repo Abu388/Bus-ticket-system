@@ -6,7 +6,7 @@ import Naveigator from "./Header/Naveigator";
 const destinations = [
   {
     id: 1,
-    from: "Addis Ababa",
+    from: "Addis Ababa, Gelan",
     to: "Gondar",
     description: "The vibrant capital city to historic Gondar.",
     times: ["08:00 AM", "12:00 PM", "06:00 PM"],
@@ -48,6 +48,42 @@ const destinations = [
     times: ["10:00 AM", "03:00 PM"],
     availableDates: ["2025-09-22", "2025-09-24"],
     image: "https://cdn.britannica.com/23/93423-050-107B2836/obelisk-kingdom-Aksum-Ethiopian-name-city.jpg",
+  },
+  {
+    id: 6,
+    from: "Addis Ababa, Lamberet ",
+    to: "Gondar",
+    description: "The vibrant capital city to historic Gondar.",
+    times: ["08:00 AM", "12:00 PM", "06:00 PM"],
+    availableDates: ["2025-09-20", "2025-09-21", "2025-09-22"],
+    image: "https://imgix.brilliant-ethiopia.com/fasil-ghebbi-royal-enclosure-gondar.jpg?auto=format,enhance,compress&fit=crop&crop=entropy,faces,focalpoint&w=580&h=480&q=40",
+  },
+  {
+    id: 7,
+    from: "Hawassa, South Spring Hotel",
+    to: "Addis Ababa",
+    description: "The vibrant capital city to historic Gondar.",
+    times: ["08:00 AM", "12:00 PM", "06:00 PM"],
+    availableDates: ["2025-09-20", "2025-09-21", "2025-09-22"],
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLAEBgwe-YsXExpRQBgMSR-DO5KsMwfY4X7w&s",
+  },
+  {
+    id: 8,
+    from: "Addis Ababa, UNISA",
+    to: "Hawassa",
+    description: "The vibrant capital city to historic Gondar.",
+    times: ["08:00 AM", "12:00 PM", "06:00 PM"],
+    availableDates: ["2025-09-20", "2025-09-21", "2025-09-22"],
+    image: "https://imgix.brilliant-ethiopia.com/fasil-ghebbi-royal-enclosure-gondar.jpg?auto=format,enhance,compress&fit=crop&crop=entropy,faces,focalpoint&w=580&h=480&q=40",
+  },
+  {
+    id: 9,
+    from: "Shashemene, Tantostia Hotel",
+    to: "Hawassa",
+    description: "The vibrant capital city to historic Gondar.",
+    times: ["08:00 AM", "12:00 PM", "06:00 PM"],
+    availableDates: ["2025-09-20", "2025-09-21", "2025-09-22"],
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd79WiCLQjPVjMVvzVxwRvr6kOcKZfq1hLAA&s",
   },
 ];
 
