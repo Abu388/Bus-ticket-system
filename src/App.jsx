@@ -18,6 +18,7 @@ import Supervisor from './Admin/Supervisor.jsx';
 import {RefundProvider} from './Context/RefundContext.jsx';
 import TravelBooking from './ManageBooking/TravelBooking'
 import TypesOfBus from './Types/TypesOfBus'
+import Driver from './Driver/Driver.jsx'
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
               <Route path="/supervisor" element={<Supervisor />} />
               <Route path="/travel-booking" element={<TravelBooking />} />
               <Route path="/types-of-bus" element={<TypesOfBus />} />
+              <Route path="/driver" element={<Driver />} />
               <Route path="*" element={<h1>404 Not Found</h1>} />
             </Routes>
           </main>
