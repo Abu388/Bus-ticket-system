@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function Spot({onSeatsFetched}) {
+function Spot({ onSeatsFetched }) {
   const [availableSeats, setAvailableSeats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,104 +10,110 @@ function Spot({onSeatsFetched}) {
   const totalSeats = 50;
 
   useEffect(() => {
-  const fetchSeats = async () => {
-    try {
-      const res = await fetch(
-        "https://busbooking-jvft.onrender.com/api/trips/1/available-seats",
-        {
-          method: "GET",
-          headers: {
-            Authorization:
-              "Bearer an86Tmrg4d8G5RZqBJcyvSAiY6WvUywz1dV3Yxp511775974",
-            "Content-Type": "application/json",
-          }, 
+    const fetchSeats = async () => {
+      try {
+        const res = await fetch(
+          "https://busbooking-jvft.onrender.com/api/trips/1/available-seats",
+          {
+            method: "GET",
+            headers: {
+              Authorization:
+                "Bearer an86Tmrg4d8G5RZqBJcyvSAiY6WvUywz1dV3Yxp511775974",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
         }
-      );
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+        const data = await res.json();
+        setSeats(data);
+        setAvailableSeats(data);
+
+        if (onSeatsFetched) {
+          onSeatsFetched(data);
+        }
+
+        console.log("Seats fetched:", data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const data = await res.json();
-      setSeats(data);
-      setAvailableSeats(data);
+    fetchSeats();
+  }, []);
 
-      // ⚡ This is the key step
-      if (onSeatsFetched) {
-        onSeatsFetched(data); // send available seats to parent
-      }
+  if (loading)
+    return <p className="text-blue-500 text-center">Loading available seats...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
 
-      console.log("Seats fetched:", data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+  // Split seats into lower (1-25) and upper (26-50)
+  const lowerSeats = Array.from({ length: totalSeats / 2 }, (_, i) => i + 1);
+  const upperSeats = Array.from(
+    { length: totalSeats / 2 },
+    (_, i) => i + 1 + totalSeats / 2
+  );
+
+  const getSeatColor = (seatNumber) => {
+    return availableSeats.includes(seatNumber)
+      ? "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+      : "bg-red-500 cursor-not-allowed opacity-7";
   };
 
-  fetchSeats();
-}, []); // no need to include onSeatsFetched in deps unless it can change
-
-
-  if (loading) return <p style={{ color: "blue" ,textAlign :"center"}}>Loading available seats...</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
-
-  // Create an array from 1 to totalSeats
-  const allSeats = Array.from({ length: totalSeats }, (_, i) => i + 1);
-
   return (
-    <div className="seats-container">
-      <h2>Seats Layout</h2>
-      <div className="seats-grid">
-        {allSeats.map((seatNumber) => {
-          const isAvailable = availableSeats.includes(seatNumber);
-          return (
-            <span
-              key={seatNumber}
-              className={`seat-item ${isAvailable ? "available" : "used"}`}
-            >
-              {seatNumber}
-            </span>
-          );
-        })}
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-10">
+      {/* Bus Layout */}
+      <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-md max-w-2xl w-full">
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-medium">
+            🚌 Driver
+          </div>
+        </div>
 
-      {/* Inline CSS */}
-      <style>{`
-        .seats-container {
-          max-width: 600px;
-          margin: 20px auto;
-          text-align: center;
-        }
-        .seats-grid {
-          display: grid;
-          grid-template-columns: repeat(10, 1fr);
-          gap: 10px;
-          justify-items: center;
-        }
-        .seat-item {
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 8px;
-          font-weight: 600;
-          color: white;
-          cursor: pointer;
-          transition: transform 0.2s;
-        }
-        .seat-item.available {
-          background-color: #3b82f6; /* blue */
-        }
-        .seat-item.used {
-          background-color: #ef4444; /* red */
-          cursor: not-allowed;
-        }
-        .seat-item:hover.available {
-          transform: scale(1.1);
-        }
-      `}</style>
+        {/* Lower Deck */}
+        <div className="mb-8">
+          <h4 className="text-sm font-semibold mb-4 text-center text-gray-700">
+            Lower Deck
+          </h4>
+          <div className="grid grid-cols-5 gap-3 max-w-md mx-auto">
+            {lowerSeats.map((seatNumber) => (
+              <div
+                key={seatNumber}
+                className={`w-14 h-14 rounded-lg flex items-center justify-center text-sm font-bold text-white transition ${getSeatColor(
+                  seatNumber
+                )}`}
+                title={`Seat ${seatNumber}`}
+              >
+                {seatNumber}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Upper Deck */}
+        <div>
+          <h4 className="text-sm font-semibold mb-4 text-center text-gray-700">
+            Upper Deck
+          </h4>
+          <div className="grid grid-cols-5 gap-3 max-w-md mx-auto">
+            {upperSeats.map((seatNumber) => (
+              <div
+                key={seatNumber}
+                className={`w-14 h-14 rounded-lg flex items-center justify-center text-sm font-bold text-white transition ${getSeatColor(
+                  seatNumber
+                )}`}
+                title={`Seat ${seatNumber}`}
+              >
+                {seatNumber}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
