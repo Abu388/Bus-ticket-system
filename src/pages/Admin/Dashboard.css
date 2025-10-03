@@ -1,0 +1,132 @@
+/* --- Dashboard Layout --- */
+.dashboard-container {
+    padding: 30px;
+    background-color: #f4f6f9;
+    min-height: calc(100vh - 60px); 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.dashboard-container h1 {
+    font-size: 2rem;
+    color: #1f2937;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+/* --- KPI Cards Grid --- */
+.kpi-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-left: 5px solid; /* Color stripe for identity */
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+}
+
+/* Card Specific Styling */
+.revenue-card { border-left-color: #10b981; } /* Green */
+.tickets-card { border-left-color: #3b82f6; }  /* Blue */
+.deposits-card { border-left-color: #f59e0b; } /* Amber */
+
+.card-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.card-title {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.card-value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #1f2937;
+    margin-bottom: 10px;
+}
+
+.card-footer {
+    display: block;
+    font-size: 0.85rem;
+    color: #9ca3af;
+    padding-top: 10px;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* --- Recent Activity Section --- */
+.recent-activity-section h2 {
+    font-size: 1.5rem;
+    color: #374151;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 10px;
+}
+
+.activity-list {
+    list-style: none;
+    padding: 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.activity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 0.95rem;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-label {
+    font-weight: 600;
+    width: 15%;
+    color: #4b5563;
+}
+
+.activity-amount {
+    font-weight: 700;
+    color: #10b981; /* Green for monetary value */
+    width: 20%;
+    text-align: left;
+}
+
+.activity-details {
+    color: #6b7280;
+    flex-grow: 1;
+    text-align: left;
+}
+
+.activity-time {
+    color: #9ca3af;
+    font-size: 0.8rem;
+    text-align: right;
+    width: 15%;
+}
+
+.no-activity {
+    padding: 20px;
+    text-align: center;
+    color: #9ca3af;
+    font-style: italic;
+}

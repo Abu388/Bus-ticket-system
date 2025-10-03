@@ -1,0 +1,181 @@
+/* --- Reports Layout --- */
+.reports-container {
+    padding: 30px;
+    background-color: #f7f9fc;
+    min-height: calc(100vh - 60px); 
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* --- Header and Controls --- */
+.reports-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e6ed;
+}
+
+.reports-header h1 {
+    font-size: 2rem;
+    color: #1a202c;
+    font-weight: 700;
+}
+
+.report-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.filter-btn {
+    background-color: #f1f5f9;
+    color: #4a5568;
+    border: 1px solid #cbd5e1;
+}
+.filter-btn:hover {
+    background-color: #e2e8f0;
+}
+
+.export-btn {
+    background-color: #2c5282; /* Darker blue for a professional action */
+    color: white;
+    border: none;
+}
+.export-btn:hover {
+    background-color: #2a4365;
+}
+
+/* --- Section Styling --- */
+.reports-section {
+    margin-bottom: 40px;
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.reports-section h2 {
+    font-size: 1.4rem;
+    color: #2d3748;
+    border-bottom: 1px solid #edf2f7;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* --- 1. Metric Grid Cards --- */
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.metric-card {
+    border: 1px solid #e2e8f0;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: border-color 0.3s;
+}
+
+.metric-card:hover {
+    border-color: #3b82f6;
+}
+
+.metric-icon {
+    font-size: 1.8rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.metric-title {
+    font-size: 0.9rem;
+    color: #718096;
+    margin: 0;
+}
+
+.metric-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+/* --- 2. Financial Breakdown --- */
+.financial-breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.financial-card {
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+}
+
+.financial-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.summary-value {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.summary-detail {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.net-profit-card {
+    background-color: #059669; /* Dark Green */
+}
+.deposits-card {
+    background-color: #3b82f6; /* Blue */
+}
+.commission-card {
+    background-color: #f59e0b; /* Amber/Orange */
+}
+
+/* --- 3. Chart Placeholder --- */
+.chart-placeholder {
+    height: 300px;
+    background-color: #f1f5f9;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #94a3b8;
+    font-size: 1.2rem;
+}
+
+.chart-note {
+    font-size: 0.85rem;
+    margin-top: 10px;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .reports-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .report-controls {
+        margin-top: 15px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .financial-breakdown-grid {
+        grid-template-columns: 1fr;
+    }
+}
