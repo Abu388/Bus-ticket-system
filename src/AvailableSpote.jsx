@@ -86,11 +86,7 @@ function AvailableSpots() {
           method: "POST",
           headers: {
             Authorization:
-<<<<<<< HEAD
-              "Bearer sRGNeyl1vHIWuJzq16h1VTOjEUtxPDDZ9oTZaEOt7d33d199",
-=======
               "Bearer cmwY1VW9HS7joMwB1bahxB9JJ15THKpYWyB1sUlQae6c0f9b",
->>>>>>> 859fe779128a0a0077f9b12afa14b9785825028b
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
