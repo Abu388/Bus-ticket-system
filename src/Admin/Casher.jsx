@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ShoppingCart,
   DollarSign,
@@ -22,6 +21,17 @@ import {
   Ticket,
   Printer,
   User,
+  Home,
+  FileText,
+  Users,
+  CreditCard as CreditCardIcon,
+  History,
+  BarChart3,
+  MessageCircle,
+  Clock,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import {
@@ -248,6 +258,22 @@ const CombinedCashierDashboard = () => {
     localStorage.setItem("bookings", JSON.stringify(bookings));
     calculateDashboardStats(bookings);
   }, [bookings]);
+
+  // Sidebar tabs config with icons
+  const sidebarTabs = [
+    { value: "dashboard", label: "Dashboard", icon: Home },
+    { value: "sales", label: "Sales", icon: ShoppingCart },
+    { value: "bookings", label: "Ticket Bookings", icon: Ticket },
+    { value: "pending", label: "Pending", icon: Clock, count: true },
+    { value: "change-requests", label: "Changes", icon: AlertCircle, count: true },
+    { value: "approved", label: "Approved", icon: CheckCircle, count: true },
+    { value: "denied", label: "Denied", icon: XCircle, count: true },
+    { value: "passengers", label: "Passengers", icon: Users },
+    { value: "payments", label: "Payments", icon: CreditCardIcon },
+    { value: "history", label: "Transaction History", icon: History },
+    { value: "reports", label: "Reports", icon: BarChart3 },
+    { value: "support", label: "Support", icon: MessageCircle },
+  ];
 
   // ---------------- Utilities ----------------
   const pushNotification = (message, type = "info") => {
@@ -989,1251 +1015,1260 @@ const CombinedCashierDashboard = () => {
         </Card>
       </div>
 
-      {/* Tabs (merged structure) */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-        <TabsList className="flex-wrap h-auto">
-          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          <TabsTrigger value="sales">Sales</TabsTrigger>
-          <TabsTrigger value="bookings">Ticket Bookings</TabsTrigger>
-          <TabsTrigger value="pending">
-            Pending ({getTabCount("pending")})
-          </TabsTrigger>
-          <TabsTrigger value="change-requests">
-            Changes ({getTabCount("change-requests")})
-          </TabsTrigger>
-          <TabsTrigger value="approved">
-            Approved ({getTabCount("approved")})
-          </TabsTrigger>
-          <TabsTrigger value="denied">
-            Denied ({getTabCount("denied")})
-          </TabsTrigger>
-          <TabsTrigger value="passengers">Passengers</TabsTrigger>
-          <TabsTrigger value="payments">Payments</TabsTrigger>
-          <TabsTrigger value="history">Transaction History</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-          <TabsTrigger value="support">Support</TabsTrigger>
-        </TabsList>
-
-        {/* Dashboard Tab (from second) */}
-        <TabsContent value="dashboard" className="space-y-6 mt-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card>
-              <CardHeader className="text-center">
-                <CardTitle className="text-3xl">{totalTickets}</CardTitle>
-                <CardDescription>Tickets Sold Today</CardDescription>
-                <p className="text-sm text-muted-foreground">
-                  Weekly: {weeklyTickets}
-                </p>
-              </CardHeader>
-            </Card>
-            <Card>
-              <CardHeader className="text-center">
-                <CardTitle className="text-3xl">ETB {cashCollected}</CardTitle>
-                <CardDescription>Cash Collected</CardDescription>
-              </CardHeader>
-            </Card>
-            <Card>
-              <CardHeader className="text-center">
-                <CardTitle className="text-3xl">ETB {onlinePayments}</CardTitle>
-                <CardDescription>Online Payments</CardDescription>
-              </CardHeader>
-            </Card>
-            <Card>
-              <CardHeader className="text-center">
-                <CardTitle className="text-3xl">
-                  {activeBuses} / {activeRoutes}
-                </CardTitle>
-                <CardDescription>Active Buses / Routes</CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle>Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex gap-4">
-                  <Dialog
-                    open={issueTicketOpen}
-                    onOpenChange={setIssueTicketOpen}
-                  >
-                    <DialogTrigger asChild>
-                      <Button className="w-full">Issue Ticket</Button>
-                    </DialogTrigger>
-                  </Dialog>
-                  <Dialog
-                    open={newPassengerOpen}
-                    onOpenChange={setNewPassengerOpen}
-                  >
-                    <DialogTrigger asChild>
-                      <Button variant="secondary" className="w-full">
-                        Register Passenger
-                      </Button>
-                    </DialogTrigger>
-                  </Dialog>
-                </div>
-                <div className="flex-1 relative">
-                  <Input
-                    type="text"
-                    placeholder="Scan QR or Enter Ticket Number"
-                    value={validateInput}
-                    onChange={(e) => setValidateInput(e.target.value)}
-                    onKeyPress={(e) =>
-                      e.key === "Enter" && handleValidateTicket()
-                    }
-                    className="pr-24"
-                  />
-                  <Button
-                    onClick={handleValidateTicket}
-                    variant="secondary"
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8"
-                  >
-                    Validate
-                  </Button>
-                </div>
-                {validatedTicket && (
-                  <div className="bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 p-3 rounded-md border border-green-200 dark:border-green-800">
-                    <p className="font-semibold">
-                      Ticket Valid: #{validatedTicket.id} -{" "}
-                      {validatedTicket.route} | QR: {validatedTicket.qrCode}
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Links</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
+      {/* Sidebar Layout */}
+      <div className="flex">
+        {/* Prominent Sidebar */}
+        <aside className="w-72 bg-card border-r shadow-lg shrink-0">
+          <nav className="p-4 space-y-1">
+            {sidebarTabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
                 <Button
-                  onClick={() => setActiveTab("payments")}
-                  variant="outline"
-                  className="w-full"
+                  key={tab.value}
+                  variant={activeTab === tab.value ? "default" : "ghost"}
+                  className={`w-full justify-start hover:bg-muted/80 ${
+                    activeTab === tab.value ? "bg-primary/10 text-primary" : ""
+                  }`}
+                  onClick={() => setActiveTab(tab.value)}
                 >
-                  Record Payment
-                </Button>
-                <Button
-                  onClick={() => setActiveTab("support")}
-                  variant="outline"
-                  className="w-full"
-                >
-                  Escalate Issue
-                </Button>
-                <Button
-                  onClick={() => setActiveTab("reports")}
-                  variant="outline"
-                  className="w-full"
-                >
-                  View Reports
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Sales Tab (from first) */}
-        <TabsContent value="sales">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 items-end">
-            <Input
-              placeholder="Item Name"
-              value={cartItem.item}
-              onChange={(e) =>
-                setCartItem({ ...cartItem, item: e.target.value })
-              }
-            />
-            <Input
-              type="number"
-              placeholder="Quantity"
-              value={cartItem.quantity}
-              onChange={(e) =>
-                setCartItem({ ...cartItem, quantity: Number(e.target.value) })
-              }
-            />
-            <Input
-              type="number"
-              placeholder="Price"
-              value={cartItem.price}
-              onChange={(e) =>
-                setCartItem({ ...cartItem, price: Number(e.target.value) })
-              }
-            />
-            <select
-              className="border rounded p-2"
-              value={cartItem.paymentType}
-              onChange={(e) =>
-                setCartItem({ ...cartItem, paymentType: e.target.value })
-              }
-            >
-              <option value="cash">Cash</option>
-              <option value="online">Online</option>
-            </select>
-            <Button
-              onClick={() => {
-                const newTx = {
-                  id: transactions.length + 1,
-                  item: cartItem.item || "Sale",
-                  quantity: cartItem.quantity,
-                  price: cartItem.price,
-                  paymentType: cartItem.paymentType,
-                  total: cartItem.quantity * cartItem.price,
-                  status: "paid",
-                };
-                setTransactions((s) => [...s, newTx]);
-                pushNotification(`Sale recorded: ${newTx.item}`, "success");
-                setCartItem({
-                  item: "",
-                  quantity: 1,
-                  price: 0,
-                  paymentType: "cash",
-                });
-              }}
-              className="col-span-4 md:col-auto"
-            >
-              Add Sale
-            </Button>
-          </div>
-        </TabsContent>
-
-        {/* Bookings Tab (merged) */}
-        <TabsContent value="bookings">
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mt-4 items-end">
-            <select
-              className="border rounded p-2"
-              value={newBooking.passengerId}
-              onChange={(e) =>
-                setNewBooking({ ...newBooking, passengerId: e.target.value })
-              }
-            >
-              <option value="">
-                -- Select Passenger (or leave empty for guest) --
-              </option>
-              {passengers.map((p) => (
-                <option key={p.id} value={String(p.id)}>
-                  {p.name} ({p.phone})
-                </option>
-              ))}
-            </select>
-
-            <Input
-              placeholder="Passenger Name (if guest)"
-              value={newBooking.passengerName}
-              onChange={(e) =>
-                setNewBooking({ ...newBooking, passengerName: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Bus Number"
-              value={newBooking.busNumber}
-              onChange={(e) =>
-                setNewBooking({ ...newBooking, busNumber: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Seat Number"
-              value={newBooking.seatNumber}
-              onChange={(e) =>
-                setNewBooking({ ...newBooking, seatNumber: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Route"
-              value={newBooking.route}
-              onChange={(e) =>
-                setNewBooking({ ...newBooking, route: e.target.value })
-              }
-            />
-            <Button
-              onClick={handleAddBooking}
-              className="col-span-6 md:col-auto"
-            >
-              Book Ticket
-            </Button>
-          </div>
-
-          {/* Booking Table (from first, with status badges from second) */}
-          <div className="overflow-x-auto mt-6">
-            <table className="w-full table-auto border border-slate-200">
-              <thead className="bg-slate-100">
-                <tr>
-                  <th className="p-2">#</th>
-                  <th className="p-2">Passenger</th>
-                  <th className="p-2">Bus</th>
-                  <th className="p-2">Seat</th>
-                  <th className="p-2">Route</th>
-                  <th className="p-2">Status</th>
-                  <th className="p-2">Paid</th>
-                  <th className="p-2">E-Ticket</th>
-                  <th className="p-2">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredBookings.length === 0 ? (
-                  <tr>
-                    <td colSpan={9} className="p-4 text-center text-slate-500">
-                      No bookings yet
-                    </td>
-                  </tr>
-                ) : (
-                  filteredBookings.map((b) => (
-                    <tr
-                      key={b.id}
-                      className="text-center border-t border-slate-200"
-                    >
-                      <td className="p-2">{b.id}</td>
-                      <td className="p-2">
-                        {b.passengerId
-                          ? passengers.find((p) => p.id === b.passengerId)
-                              ?.name || b.passengerName
-                          : b.passengerName}
-                      </td>
-                      <td className="p-2">{b.busNumber || b.bus}</td>
-                      <td className="p-2">{b.seatNumber || b.seat}</td>
-                      <td className="p-2">{b.route}</td>
-                      <td className="p-2">
-                        <Badge variant={getStatusBadgeVariant(b.status)}>
-                          {getStatusBadgeText(b.status)}
-                        </Badge>
-                      </td>
-                      <td className="p-2">{b.paid ? "Yes" : "No"}</td>
-                      <td className="p-2">
-                        {b.status === "booked" && (
-                          <div className="flex flex-col items-center">
-                            <QRCodeSVG value={`Ticket-${b.id}`} size={64} />
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="mt-2 flex items-center gap-1"
-                              onClick={() => handlePrintTicket(b)}
-                            >
-                              <Printer size={14} /> Print
-                            </Button>
-                          </div>
-                        )}
-                      </td>
-                      <td className="p-2 space-y-2">
-                        {b.status === "booked" ? (
-                          <>
-                            <Button
-                              variant="destructive"
-                              size="sm"
-                              onClick={() => handleCancelBooking(b.id)}
-                            >
-                              Cancel
-                            </Button>
-                            <Button
-                              size="sm"
-                              onClick={() => rebookBooking(b.id)}
-                            >
-                              Rebook
-                            </Button>
-                            <Button
-                              size="sm"
-                              onClick={() => handleDecision(b.id, "approved")}
-                            >
-                              Approve
-                            </Button>
-                          </>
-                        ) : (
-                          <span className="text-sm text-slate-500">—</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </TabsContent>
-
-        {/* Status-specific Tabs (from second, integrated) */}
-        {["pending", "change-requests", "approved", "denied"].includes(
-          activeTab
-        ) && (
-          <TabsContent value={activeTab} className="space-y-6 mt-4">
-            {filteredBookings.length === 0 ? (
-              <Card className="text-center py-12">
-                <CardHeader>
-                  <CardTitle className="text-xl text-muted-foreground">{`No ${activeTab.replace(
-                    "-",
-                    " "
-                  )} bookings`}</CardTitle>
-                  <CardDescription>
-                    New requests will appear here when submitted
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {filteredBookings.map((booking) => (
-                  <Card key={booking.id}>
-                    <CardHeader className="flex flex-row items-start justify-between">
-                      <div>
-                        <CardTitle>Booking #{booking.id}</CardTitle>
-                        <CardDescription>
-                          {booking.route || `${booking.from} → ${booking.to}`}
-                        </CardDescription>
-                      </div>
-                      <Badge variant={getStatusBadgeVariant(booking.status)}>
-                        {getStatusBadgeText(booking.status)}
-                      </Badge>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label>Date & Time</Label>
-                          <p>
-                            {booking.date} at {booking.time}
-                          </p>
-                        </div>
-                        <div>
-                          <Label>Passengers</Label>
-                          <p>{booking.passengers} person(s)</p>
-                        </div>
-                        <div>
-                          <Label>Bus</Label>
-                          <p>{booking.bus || booking.busNumber}</p>
-                        </div>
-                        <div>
-                          <Label>Total Price</Label>
-                          <p className="font-bold">
-                            ETB {booking.price * booking.passengers}
-                          </p>
-                        </div>
-                      </div>
-
-                      {booking.passengerInfo && (
-                        <div>
-                          <Label className="font-semibold mb-2">
-                            Passenger Details
-                          </Label>
-                          <div className="space-y-2 max-h-32 overflow-y-auto border rounded-md p-2 bg-muted/50">
-                            {booking.passengerInfo.map((p, i) => (
-                              <div key={i} className="text-sm">
-                                <span className="font-medium">{p.name}</span> (
-                                {p.phone}) - Seat: {p.selected_spot || p.seat}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="flex gap-3">
-                        {booking.status === "pending" && (
-                          <>
-                            <Button
-                              onClick={() =>
-                                handleDecision(booking.id, "approved")
-                              }
-                              className="flex-1"
-                            >
-                              Approve
-                            </Button>
-                            <Button
-                              onClick={() =>
-                                handleDecision(booking.id, "denied")
-                              }
-                              variant="destructive"
-                              className="flex-1"
-                            >
-                              Cancel
-                            </Button>
-                          </>
-                        )}
-                        {(booking.status === "change_pending" ||
-                          booking.status === "change_requested") && (
-                          <>
-                            <Button
-                              onClick={() =>
-                                handleDecision(booking.id, "change_approved")
-                              }
-                              className="flex-1"
-                            >
-                              Approve Change
-                            </Button>
-                            <Button
-                              onClick={() =>
-                                handleDecision(booking.id, "change_denied")
-                              }
-                              variant="destructive"
-                              className="flex-1"
-                            >
-                              Deny Change
-                            </Button>
-                          </>
-                        )}
-                        {(booking.status === "approved" ||
-                          booking.status === "change_approved") && (
-                          <div className="flex w-full items-center gap-2">
-                            <span className="font-semibold text-green-600">
-                              Approved
-                            </span>
-                            <div className="flex-grow" />
-                            <Button
-                              onClick={() =>
-                                handleDecision(booking.id, "change_requested")
-                              }
-                              variant="secondary"
-                              size="sm"
-                            >
-                              Reschedule
-                            </Button>
-                            <Button
-                              onClick={() => handlePrintTicket(booking)}
-                              variant="outline"
-                              size="sm"
-                            >
-                              Print
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </TabsContent>
-        )}
-        {/* Passengers Tab (merged) */}
-        <TabsContent value="passengers" className="space-y-6 mt-4">
-          <div className="flex gap-4">
-            <Dialog open={newPassengerOpen} onOpenChange={setNewPassengerOpen}>
-              <DialogTrigger asChild>
-                <Button>Register New Passenger</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Register New Passenger</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      placeholder="Name"
-                      value={newPassenger.name}
-                      onChange={(e) =>
-                        setNewPassenger({
-                          ...newPassenger,
-                          name: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="id">ID/Passport</Label>
-                    <Input
-                      id="id"
-                      placeholder="ID/Passport"
-                      value={newPassenger.id}
-                      onChange={(e) =>
-                        setNewPassenger({ ...newPassenger, id: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
-                    <Input
-                      id="phone"
-                      placeholder="Phone"
-                      value={newPassenger.phone}
-                      onChange={(e) =>
-                        setNewPassenger({
-                          ...newPassenger,
-                          phone: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="Email"
-                      value={newPassenger.email}
-                      onChange={(e) =>
-                        setNewPassenger({
-                          ...newPassenger,
-                          email: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="nationalId">National ID</Label>
-                    <Input
-                      id="nationalId"
-                      placeholder="National ID"
-                      value={newPassenger.nationalId}
-                      onChange={(e) =>
-                        setNewPassenger({
-                          ...newPassenger,
-                          nationalId: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    variant="secondary"
-                    onClick={() => setNewPassengerOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button onClick={handleAddPassenger}>Register</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-            <Input
-              type="text"
-              placeholder="Search Passengers by Name or Phone"
-              value={lookupQuery}
-              onChange={(e) => setLookupQuery(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleLookup()}
-            />
-          </div>
-          <Card>
-            <CardHeader>
-              <CardTitle>Passenger List</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>#</TableHead>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Phone</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>National ID</TableHead>
-                    <TableHead>Past Trips</TableHead>
-                    <TableHead>Unpaid</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {passengers
-                    .filter(
-                      (p) =>
-                        p.name
-                          .toLowerCase()
-                          .includes(lookupQuery.toLowerCase()) ||
-                        p.phone.includes(lookupQuery)
-                    )
-                    .map((p) => {
-                      const handleView = () => {
-                        const pBookings = bookings.filter(
-                          (b) => b.passengerId === p.id
-                        );
-                        const pPayments = transactions.filter(
-                          (t) => t.passengerId === p.id
-                        );
-                        toast(`Passenger: ${p.name}\nTrips: ${pBookings.length}\nPayments: ${pPayments.length}\nUnpaid bookings: ${p.unpaidBookings}`)
-                      };
-
-                      const handleCollectPayment = () => {
-                        const unpaid = bookings.filter(
-                          (b) =>
-                            b.passengerId === p.id &&
-                            !b.paid &&
-                            b.status === "booked"
-                        );
-                        if (unpaid.length === 0)
-                          return toast("No unpaid bookings.");
-                        const choice = prompt(
-                          `Unpaid bookings: ${unpaid
-                            .map(
-                              (u) =>
-                                `${u.id} (Bus ${u.busNumber} Seat ${u.seatNumber})`
-                            )
-                            .join("; ")}\nEnter booking id to mark paid:`
-                        );
-                        if (!choice) return;
-                        const bid = Number(choice);
-                        const booking = unpaid.find((u) => u.id === bid);
-                        if (!booking)
-                          return pushNotification("Invalid booking id.");
-                        const payAmount = Number(
-                          prompt("Enter amount to record (numeric):") || "0"
-                        );
-                        if (!payAmount || payAmount <= 0)
-                          return pushNotification("Invalid amount.");
-                        const tx = {
-                          id: transactions.length + 1,
-                          item: `Booking ${booking.id}`,
-                          quantity: 1,
-                          price: payAmount,
-                          paymentType: "cash",
-                          total: payAmount,
-                          status: "paid",
-                          passengerId: p.id,
-                          bookingId: booking.id,
-                        };
-                        setTransactions((s) => [...s, tx]);
-                        setBookings((bs) =>
-                          bs.map((b) =>
-                            b.id === booking.id ? { ...b, paid: true } : b
-                          )
-                        );
-                        setPassengers((ps) =>
-                          ps.map((pp) =>
-                            pp.id === p.id
-                              ? {
-                                  ...pp,
-                                  unpaidBookings: Math.max(
-                                    0,
-                                    pp.unpaidBookings - 1
-                                  ),
-                                  pastTrips: pp.pastTrips + 1,
-                                }
-                              : pp
-                          )
-                        );
-                        pushNotification(
-                          `Recorded payment for booking ${booking.id}`,
-                          "success"
-                        );
-                      };
-
-                      const handleCancelBookingClick = () => {
-                        const unpaid = bookings.filter(
-                          (b) =>
-                            b.passengerId === p.id &&
-                            !b.paid &&
-                            b.status === "booked"
-                        );
-                        if (unpaid.length === 0)
-                          return pushNotification("No unpaid bookings.");
-                        const choice = prompt(
-                          `Unpaid bookings: ${unpaid
-                            .map((u) => u.id)
-                            .join(", ")}\nEnter booking id to cancel:`
-                        );
-                        if (!choice) return;
-                        const bid = Number(choice);
-                        handleCancelBooking(bid);
-                      };
-
-                      return (
-                        <TableRow key={p.id}>
-                          <TableCell>{p.id}</TableCell>
-                          <TableCell>{p.id}</TableCell>
-                          <TableCell>{p.name}</TableCell>
-                          <TableCell>{p.phone}</TableCell>
-                          <TableCell>{p.email || "-"}</TableCell>
-                          <TableCell>{p.nationalId || "-"}</TableCell>
-                          <TableCell>{p.pastTrips}</TableCell>
-                          <TableCell>
-                            {p.unpaidBookings > 0 ? (
-                              <span className="text-destructive">
-                                {p.unpaidBookings}
-                              </span>
-                            ) : (
-                              "0"
-                            )}
-                          </TableCell>
-                          <TableCell className="flex gap-2">
-                            <Button size="sm" onClick={handleView}>
-                              View
-                            </Button>
-                            <Button size="sm" onClick={handleCollectPayment}>
-                              Collect Payment
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={handleCancelBookingClick}
-                            >
-                              Cancel Booking
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  {passengers.length === 0 && (
-                    <TableRow>
-                      <TableCell
-                        colSpan={9}
-                        className="p-4 text-center text-slate-500"
-                      >
-                        No passengers yet
-                      </TableCell>
-                    </TableRow>
+                  <Icon className="mr-3 h-4 w-4" />
+                  <span className="mr-auto">{tab.label}</span>
+                  {tab.count && (
+                    <Badge variant="secondary" className="ml-auto">
+                      {getTabCount(tab.value)}
+                    </Badge>
                   )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                </Button>
+              );
+            })}
+          </nav>
+        </aside>
 
-        {/* Payments Tab (merged) */}
-        <TabsContent value="payments" className="space-y-6 mt-4">
-          <h2 className="text-xl font-bold">Payment Handling</h2>
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mt-4 items-end">
-            <Input
-              placeholder="Item / Description"
-              value={newPayment.item}
-              onChange={(e) =>
-                setNewPayment({ ...newPayment, item: e.target.value })
-              }
-            />
-            <Input
-              type="number"
-              placeholder="Price"
-              value={newPayment.price}
-              onChange={(e) =>
-                setNewPayment({ ...newPayment, price: Number(e.target.value) })
-              }
-            />
-            <select
-              className="border rounded p-2"
-              value={newPayment.paymentType}
-              onChange={(e) =>
-                setNewPayment({ ...newPayment, paymentType: e.target.value })
-              }
-            >
-              <option value="cash">Cash</option>
-              <option value="online">Online</option>
-            </select>
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto p-4">
+          {activeTab === "dashboard" && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <Card>
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-3xl">{totalTickets}</CardTitle>
+                    <CardDescription>Tickets Sold Today</CardDescription>
+                    <p className="text-sm text-muted-foreground">
+                      Weekly: {weeklyTickets}
+                    </p>
+                  </CardHeader>
+                </Card>
+                <Card>
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-3xl">ETB {cashCollected}</CardTitle>
+                    <CardDescription>Cash Collected</CardDescription>
+                  </CardHeader>
+                </Card>
+                <Card>
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-3xl">ETB {onlinePayments}</CardTitle>
+                    <CardDescription>Online Payments</CardDescription>
+                  </CardHeader>
+                </Card>
+                <Card>
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-3xl">
+                      {activeBuses} / {activeRoutes}
+                    </CardTitle>
+                    <CardDescription>Active Buses / Routes</CardDescription>
+                  </CardHeader>
+                </Card>
+              </div>
 
-            <select
-              className="border rounded p-2"
-              value={newPayment.passengerId}
-              onChange={(e) =>
-                setNewPayment({ ...newPayment, passengerId: e.target.value })
-              }
-            >
-              <option value="">(Optional) Link to passenger</option>
-              {passengers.map((p) => (
-                <option key={p.id} value={String(p.id)}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-
-            <select
-              className="border rounded p-2"
-              value={newPayment.bookingId}
-              onChange={(e) =>
-                setNewPayment({ ...newPayment, bookingId: e.target.value })
-              }
-            >
-              <option value="">(Optional) Link to booking</option>
-              {bookings
-                .filter((b) => b.status === "booked" && !b.paid)
-                .map((b) => (
-                  <option key={b.id} value={String(b.id)}>
-                    Booking {b.id} — {b.passengerName} (Bus {b.busNumber} Seat{" "}
-                    {b.seatNumber})
-                  </option>
-                ))}
-            </select>
-
-            <Button onClick={handleAddPayment}>Record Payment</Button>
-          </div>
-
-          {/* Payments list (from first) */}
-          <div className="overflow-x-auto mt-6">
-            <table className="w-full table-auto border border-slate-200">
-              <thead className="bg-slate-100">
-                <tr>
-                  <th className="p-2">#</th>
-                  <th className="p-2">Item</th>
-                  <th className="p-2">Passenger</th>
-                  <th className="p-2">Booking</th>
-                  <th className="p-2">Type</th>
-                  <th className="p-2">Amount</th>
-                  <th className="p-2">Status</th>
-                  <th className="p-2">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {transactions.map((t) => (
-                  <tr key={t.id} className="text-center border-t">
-                    <td className="p-2">{t.id}</td>
-                    <td className="p-2">{t.item}</td>
-                    <td className="p-2">
-                      {t.passengerId
-                        ? passengers.find((p) => p.id === t.passengerId)
-                            ?.name ?? "-"
-                        : "-"}
-                    </td>
-                    <td className="p-2">
-                      {t.bookingId ? String(t.bookingId) : "-"}
-                    </td>
-                    <td className="p-2">{t.paymentType}</td>
-                    <td className="p-2">${t.total.toFixed(2)}</td>
-                    <td className="p-2">{t.status}</td>
-                    <td className="p-2 space-x-2">
-                      {t.status === "paid" && (
-                        <Button
-                          size="sm"
-                          onClick={() => markPaymentPending(t.id)}
-                        >
-                          Mark Pending
-                        </Button>
-                      )}
-                      {t.status !== "refunded" && (
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => refundPayment(t.id)}
-                        >
-                          Refund
-                        </Button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-                {transactions.length === 0 && (
-                  <tr>
-                    <td colSpan={8} className="p-4 text-center text-slate-500">
-                      No payments yet
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Additional Payment/Refund from second */}
-          <div className="grid md:grid-cols-2 gap-6 mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Accept Payment</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Select
-                  value={selectedBookingId || ""}
-                  onValueChange={setSelectedBookingId}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Booking" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {bookings
-                      .filter(
-                        (b) =>
-                          (b.status === "pending" || b.status === "approved") &&
-                          b.paymentStatus !== "paid"
-                      )
-                      .map((b) => (
-                        <SelectItem key={b.id} value={b.id.toString()}>
-                          #{b.id} - ETB {b.price * b.passengers}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-                {selectedBookingId && (
-                  <>
-                    <div className="space-y-2">
-                      <Label>Payment Method</Label>
-                      <Select
-                        value={paymentMethod}
-                        onValueChange={setPaymentMethod}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Card className="lg:col-span-2">
+                  <CardHeader>
+                    <CardTitle>Actions</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex gap-4">
+                      <Dialog
+                        open={issueTicketOpen}
+                        onOpenChange={setIssueTicketOpen}
                       >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="cash">Cash</SelectItem>
-                          <SelectItem value="online">
-                            Online / Mobile Money
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Total Amount Received</Label>
-                      <Input
-                        type="number"
-                        value={amountReceived}
-                        onChange={(e) =>
-                          setAmountReceived(parseFloat(e.target.value))
-                        }
-                      />
-                    </div>
-                    <Button onClick={handleRecordPayment} className="w-full">
-                      Record & Sync
-                    </Button>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Refund Management</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Select
-                  value={selectedBookingId || ""}
-                  onValueChange={setSelectedBookingId}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Booking for Refund" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {bookings
-                      .filter(
-                        (b) =>
-                          b.status === "denied" ||
-                          b.status === "change_denied" ||
-                          b.status === "approved"
-                      )
-                      .map((b) => (
-                        <SelectItem key={b.id} value={b.id.toString()}>
-                          #{b.id}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-                {selectedBookingId && (
-                  <>
-                    <div className="space-y-2">
-                      <Label>Refund Amount</Label>
-                      <Input
-                        type="number"
-                        value={refundAmount}
-                        onChange={(e) =>
-                          setRefundAmount(parseFloat(e.target.value))
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Refund Method</Label>
-                      <Select
-                        value={refundMethod}
-                        onValueChange={setRefundMethod}
+                        <DialogTrigger asChild>
+                          <Button className="w-full">Issue Ticket</Button>
+                        </DialogTrigger>
+                      </Dialog>
+                      <Dialog
+                        open={newPassengerOpen}
+                        onOpenChange={setNewPassengerOpen}
                       >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="cash">Cash</SelectItem>
-                          <SelectItem value="credit">Credit</SelectItem>
-                          <SelectItem value="wallet">Wallet Balance</SelectItem>
-                        </SelectContent>
-                      </Select>
+                        <DialogTrigger asChild>
+                          <Button variant="secondary" className="w-full">
+                            Register Passenger
+                          </Button>
+                        </DialogTrigger>
+                      </Dialog>
                     </div>
-                    <div className="space-y-2">
-                      <Label>Refund Reason</Label>
-                      <Textarea
-                        value={refundReason}
-                        onChange={(e) => setRefundReason(e.target.value)}
+                    <div className="flex-1 relative">
+                      <Input
+                        type="text"
+                        placeholder="Scan QR or Enter Ticket Number"
+                        value={validateInput}
+                        onChange={(e) => setValidateInput(e.target.value)}
+                        onKeyPress={(e) =>
+                          e.key === "Enter" && handleValidateTicket()
+                        }
+                        className="pr-24"
                       />
+                      <Button
+                        onClick={handleValidateTicket}
+                        variant="secondary"
+                        className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8"
+                      >
+                        Validate
+                      </Button>
                     </div>
+                    {validatedTicket && (
+                      <div className="bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300 p-3 rounded-md border border-green-200 dark:border-green-800">
+                        <p className="font-semibold">
+                          Ticket Valid: #{validatedTicket.id} -{" "}
+                          {validatedTicket.route} | QR: {validatedTicket.qrCode}
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Quick Links</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
                     <Button
-                      onClick={handleRefund}
-                      variant="destructive"
+                      onClick={() => setActiveTab("payments")}
+                      variant="outline"
                       className="w-full"
                     >
-                      Process Refund
+                      Record Payment
                     </Button>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Transaction History Tab (from first) */}
-        <TabsContent value="history">
-          <div className="overflow-x-auto mt-4">
-            <table className="w-full table-auto border border-slate-200">
-              <thead className="bg-slate-100">
-                <tr>
-                  <th className="p-2">#</th>
-                  <th className="p-2">Item</th>
-                  <th className="p-2">Qty</th>
-                  <th className="p-2">Price</th>
-                  <th className="p-2">Payment</th>
-                  <th className="p-2">Total</th>
-                  <th className="p-2">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {transactions.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="p-4 text-center text-slate-500">
-                      No transactions yet
-                    </td>
-                  </tr>
-                ) : (
-                  transactions.map((t) => (
-                    <tr
-                      key={t.id}
-                      className="text-center border-t border-slate-200"
+                    <Button
+                      onClick={() => setActiveTab("support")}
+                      variant="outline"
+                      className="w-full"
                     >
-                      <td className="p-2">{t.id}</td>
-                      <td className="p-2">{t.item}</td>
-                      <td className="p-2">{t.quantity}</td>
-                      <td className="p-2">${t.price.toFixed(2)}</td>
-                      <td className="p-2">{t.paymentType}</td>
-                      <td className="p-2">${t.total.toFixed(2)}</td>
-                      <td className="p-2">{t.status}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </TabsContent>
+                      Escalate Issue
+                    </Button>
+                    <Button
+                      onClick={() => setActiveTab("reports")}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      View Reports
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
 
-        {/* Reports Tab (from second) */}
-        <TabsContent value="reports" className="space-y-6 mt-4">
-          <h2 className="text-xl font-bold">Sales & Revenue Summary</h2>
-          <Card>
-            <CardHeader>
-              <CardTitle>Summary</CardTitle>
-            </CardHeader>
-            <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-              <div>
-                <p className="text-muted-foreground">Tickets Today</p>
-                <p className="text-2xl font-bold">{totalTickets}</p>
-              </div>
-              <div>
-                <p className="text-muted-foreground">Tickets Weekly</p>
-                <p className="text-2xl font-bold">{weeklyTickets}</p>
-              </div>
-              <div>
-                <p className="text-muted-foreground">Revenue Today</p>
-                <p className="text-2xl font-bold text-green-600">
-                  ETB {totalRevenue}
-                </p>
-              </div>
-              <div>
-                <p className="text-muted-foreground">Cancellations</p>
-                <p className="text-2xl font-bold text-destructive">
-                  {cancellations}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Revenue Breakdown by Route</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Start Date</Label>
-                    <Input
-                      type="date"
-                      value={dateRange.start}
-                      onChange={(e) =>
-                        setDateRange({ ...dateRange, start: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>End Date</Label>
-                    <Input
-                      type="date"
-                      value={dateRange.end}
-                      onChange={(e) =>
-                        setDateRange({ ...dateRange, end: e.target.value })
-                      }
-                    />
-                  </div>
-                </div>
-                <Button onClick={generateRevenueBreakdown}>
-                  Filter & Generate
-                </Button>
-                {revenueBreakdown.length > 0 && (
-                  <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {revenueBreakdown.map(([route, rev]) => (
-                      <div
-                        key={route}
-                        className="flex justify-between p-2 bg-muted rounded"
-                      >
-                        <span className="text-sm">{route}</span>
-                        <span className="font-bold text-green-600">
-                          ETB {rev}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Breakdown by Payment Type</CardTitle>
-              </CardHeader>
-              <CardContent className="flex justify-around text-center pt-6">
-                <div>
-                  <p className="text-2xl font-bold text-green-600">
-                    ETB {paymentTypeBreakdown.cash}
-                  </p>
-                  <p className="text-muted-foreground">Cash</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-blue-600">
-                    ETB {paymentTypeBreakdown.online}
-                  </p>
-                  <p className="text-muted-foreground">Online</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
+          {activeTab === "sales" && (
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+              <Input
+                placeholder="Item Name"
+                value={cartItem.item}
+                onChange={(e) =>
+                  setCartItem({ ...cartItem, item: e.target.value })
+                }
+              />
+              <Input
+                type="number"
+                placeholder="Quantity"
+                value={cartItem.quantity}
+                onChange={(e) =>
+                  setCartItem({ ...cartItem, quantity: Number(e.target.value) })
+                }
+              />
+              <Input
+                type="number"
+                placeholder="Price"
+                value={cartItem.price}
+                onChange={(e) =>
+                  setCartItem({ ...cartItem, price: Number(e.target.value) })
+                }
+              />
+              <select
+                className="border rounded p-2"
+                value={cartItem.paymentType}
+                onChange={(e) =>
+                  setCartItem({ ...cartItem, paymentType: e.target.value })
+                }
+              >
+                <option value="cash">Cash</option>
+                <option value="online">Online</option>
+              </select>
+              <Button
+                onClick={() => {
+                  const newTx = {
+                    id: transactions.length + 1,
+                    item: cartItem.item || "Sale",
+                    quantity: cartItem.quantity,
+                    price: cartItem.price,
+                    paymentType: cartItem.paymentType,
+                    total: cartItem.quantity * cartItem.price,
+                    status: "paid",
+                  };
+                  setTransactions((s) => [...s, newTx]);
+                  pushNotification(`Sale recorded: ${newTx.item}`, "success");
+                  setCartItem({
+                    item: "",
+                    quantity: 1,
+                    price: 0,
+                    paymentType: "cash",
+                  });
+                }}
+                className="col-span-4 md:col-auto"
+              >
+                Add Sale
+              </Button>
+            </div>
+          )}
 
-        {/* Support Tab (from second) */}
-        <TabsContent value="support" className="space-y-6 mt-4">
-          <h2 className="text-xl font-bold">Support & Escalation</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Escalate Issue</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Textarea
-                  placeholder="Describe the unresolved refund/payment problem..."
-                  value={escalationIssue}
-                  onChange={(e) => setEscalationIssue(e.target.value)}
+          {activeTab === "bookings" && (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end mb-6">
+                <select
+                  className="border rounded p-2"
+                  value={newBooking.passengerId}
+                  onChange={(e) =>
+                    setNewBooking({ ...newBooking, passengerId: e.target.value })
+                  }
+                >
+                  <option value="">
+                    -- Select Passenger (or leave empty for guest) --
+                  </option>
+                  {passengers.map((p) => (
+                    <option key={p.id} value={String(p.id)}>
+                      {p.name} ({p.phone})
+                    </option>
+                  ))}
+                </select>
+
+                <Input
+                  placeholder="Passenger Name (if guest)"
+                  value={newBooking.passengerName}
+                  onChange={(e) =>
+                    setNewBooking({ ...newBooking, passengerName: e.target.value })
+                  }
                 />
-                <Button onClick={handleEscalate}>Send to Support Team</Button>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Chat with Admin</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="h-40 bg-muted rounded p-2 overflow-y-auto space-y-2">
-                  {chatMessages.map((msg, idx) => (
-                    <div
-                      key={idx}
-                      className={`p-2 rounded max-w-[80%] ${
-                        msg.sender === "cashier"
-                          ? "bg-primary text-primary-foreground ml-auto"
-                          : "bg-secondary"
-                      }`}
-                    >
-                      <p>{msg.text}</p>
-                    </div>
+                <Input
+                  placeholder="Bus Number"
+                  value={newBooking.busNumber}
+                  onChange={(e) =>
+                    setNewBooking({ ...newBooking, busNumber: e.target.value })
+                  }
+                />
+                <Input
+                  placeholder="Seat Number"
+                  value={newBooking.seatNumber}
+                  onChange={(e) =>
+                    setNewBooking({ ...newBooking, seatNumber: e.target.value })
+                  }
+                />
+                <Input
+                  placeholder="Route"
+                  value={newBooking.route}
+                  onChange={(e) =>
+                    setNewBooking({ ...newBooking, route: e.target.value })
+                  }
+                />
+                <Button
+                  onClick={handleAddBooking}
+                  className="col-span-6 md:col-auto"
+                >
+                  Book Ticket
+                </Button>
+              </div>
+
+              {/* Booking Table (from first, with status badges from second) */}
+              <div className="overflow-x-auto">
+                <table className="w-full table-auto border border-slate-200">
+                  <thead className="bg-slate-100">
+                    <tr>
+                      <th className="p-2">#</th>
+                      <th className="p-2">Passenger</th>
+                      <th className="p-2">Bus</th>
+                      <th className="p-2">Seat</th>
+                      <th className="p-2">Route</th>
+                      <th className="p-2">Status</th>
+                      <th className="p-2">Paid</th>
+                      <th className="p-2">E-Ticket</th>
+                      <th className="p-2">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredBookings.length === 0 ? (
+                      <tr>
+                        <td colSpan={9} className="p-4 text-center text-slate-500">
+                          No bookings yet
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredBookings.map((b) => (
+                        <tr
+                          key={b.id}
+                          className="text-center border-t border-slate-200"
+                        >
+                          <td className="p-2">{b.id}</td>
+                          <td className="p-2">
+                            {b.passengerId
+                              ? passengers.find((p) => p.id === b.passengerId)
+                                  ?.name || b.passengerName
+                              : b.passengerName}
+                          </td>
+                          <td className="p-2">{b.busNumber || b.bus}</td>
+                          <td className="p-2">{b.seatNumber || b.seat}</td>
+                          <td className="p-2">{b.route}</td>
+                          <td className="p-2">
+                            <Badge variant={getStatusBadgeVariant(b.status)}>
+                              {getStatusBadgeText(b.status)}
+                            </Badge>
+                          </td>
+                          <td className="p-2">{b.paid ? "Yes" : "No"}</td>
+                          <td className="p-2">
+                            {b.status === "booked" && (
+                              <div className="flex flex-col items-center">
+                                <QRCodeSVG value={`Ticket-${b.id}`} size={64} />
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="mt-2 flex items-center gap-1"
+                                  onClick={() => handlePrintTicket(b)}
+                                >
+                                  <Printer size={14} /> Print
+                                </Button>
+                              </div>
+                            )}
+                          </td>
+                          <td className="p-2 space-y-2">
+                            {b.status === "booked" ? (
+                              <>
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  onClick={() => handleCancelBooking(b.id)}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  onClick={() => rebookBooking(b.id)}
+                                >
+                                  Rebook
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  onClick={() => handleDecision(b.id, "approved")}
+                                >
+                                  Approve
+                                </Button>
+                              </>
+                            ) : (
+                              <span className="text-sm text-slate-500">—</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+
+          {["pending", "change-requests", "approved", "denied"].includes(activeTab) && (
+            <div className="space-y-6">
+              {filteredBookings.length === 0 ? (
+                <Card className="text-center py-12">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-muted-foreground">{`No ${activeTab.replace(
+                      "-",
+                      " "
+                    )} bookings`}</CardTitle>
+                    <CardDescription>
+                      New requests will appear here when submitted
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {filteredBookings.map((booking) => (
+                    <Card key={booking.id}>
+                      <CardHeader className="flex flex-row items-start justify-between">
+                        <div>
+                          <CardTitle>Booking #{booking.id}</CardTitle>
+                          <CardDescription>
+                            {booking.route || `${booking.from} → ${booking.to}`}
+                          </CardDescription>
+                        </div>
+                        <Badge variant={getStatusBadgeVariant(booking.status)}>
+                          {getStatusBadgeText(booking.status)}
+                        </Badge>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label>Date & Time</Label>
+                            <p>
+                              {booking.date} at {booking.time}
+                            </p>
+                          </div>
+                          <div>
+                            <Label>Passengers</Label>
+                            <p>{booking.passengers} person(s)</p>
+                          </div>
+                          <div>
+                            <Label>Bus</Label>
+                            <p>{booking.bus || booking.busNumber}</p>
+                          </div>
+                          <div>
+                            <Label>Total Price</Label>
+                            <p className="font-bold">
+                              ETB {booking.price * booking.passengers}
+                            </p>
+                          </div>
+                        </div>
+
+                        {booking.passengerInfo && (
+                          <div>
+                            <Label className="font-semibold mb-2">
+                              Passenger Details
+                            </Label>
+                            <div className="space-y-2 max-h-32 overflow-y-auto border rounded-md p-2 bg-muted/50">
+                              {booking.passengerInfo.map((p, i) => (
+                                <div key={i} className="text-sm">
+                                  <span className="font-medium">{p.name}</span> (
+                                  {p.phone}) - Seat: {p.selected_spot || p.seat}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex gap-3">
+                          {booking.status === "pending" && (
+                            <>
+                              <Button
+                                onClick={() =>
+                                  handleDecision(booking.id, "approved")
+                                }
+                                className="flex-1"
+                              >
+                                Approve
+                              </Button>
+                              <Button
+                                onClick={() =>
+                                  handleDecision(booking.id, "denied")
+                                }
+                                variant="destructive"
+                                className="flex-1"
+                              >
+                                Cancel
+                              </Button>
+                            </>
+                          )}
+                          {(booking.status === "change_pending" ||
+                            booking.status === "change_requested") && (
+                            <>
+                              <Button
+                                onClick={() =>
+                                  handleDecision(booking.id, "change_approved")
+                                }
+                                className="flex-1"
+                              >
+                                Approve Change
+                              </Button>
+                              <Button
+                                onClick={() =>
+                                  handleDecision(booking.id, "change_denied")
+                                }
+                                variant="destructive"
+                                className="flex-1"
+                              >
+                                Deny Change
+                              </Button>
+                            </>
+                          )}
+                          {(booking.status === "approved" ||
+                            booking.status === "change_approved") && (
+                            <div className="flex w-full items-center gap-2">
+                              <span className="font-semibold text-green-600">
+                                Approved
+                              </span>
+                              <div className="flex-grow" />
+                              <Button
+                                onClick={() =>
+                                  handleDecision(booking.id, "change_requested")
+                                }
+                                variant="secondary"
+                                size="sm"
+                              >
+                                Reschedule
+                              </Button>
+                              <Button
+                                onClick={() => handlePrintTicket(booking)}
+                                variant="outline"
+                                size="sm"
+                              >
+                                Print
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
-                <div className="flex gap-2">
-                  <Input
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Type urgent message..."
-                    onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                  />
-                  <Button onClick={handleSendMessage}>Send</Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+              )}
+            </div>
+          )}
+
+          {activeTab === "passengers" && (
+            <div className="space-y-6">
+              <div className="flex gap-4">
+                <Dialog open={newPassengerOpen} onOpenChange={setNewPassengerOpen}>
+                  <DialogTrigger asChild>
+                    <Button>Register New Passenger</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Register New Passenger</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Name</Label>
+                        <Input
+                          id="name"
+                          placeholder="Name"
+                          value={newPassenger.name}
+                          onChange={(e) =>
+                            setNewPassenger({
+                              ...newPassenger,
+                              name: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="id">ID/Passport</Label>
+                        <Input
+                          id="id"
+                          placeholder="ID/Passport"
+                          value={newPassenger.id}
+                          onChange={(e) =>
+                            setNewPassenger({ ...newPassenger, id: e.target.value })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="phone">Phone</Label>
+                        <Input
+                          id="phone"
+                          placeholder="Phone"
+                          value={newPassenger.phone}
+                          onChange={(e) =>
+                            setNewPassenger({
+                              ...newPassenger,
+                              phone: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="Email"
+                          value={newPassenger.email}
+                          onChange={(e) =>
+                            setNewPassenger({
+                              ...newPassenger,
+                              email: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="nationalId">National ID</Label>
+                        <Input
+                          id="nationalId"
+                          placeholder="National ID"
+                          value={newPassenger.nationalId}
+                          onChange={(e) =>
+                            setNewPassenger({
+                              ...newPassenger,
+                              nationalId: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        variant="secondary"
+                        onClick={() => setNewPassengerOpen(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button onClick={handleAddPassenger}>Register</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                <Input
+                  type="text"
+                  placeholder="Search Passengers by Name or Phone"
+                  value={lookupQuery}
+                  onChange={(e) => setLookupQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleLookup()}
+                />
+              </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Passenger List</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>#</TableHead>
+                        <TableHead>ID</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Phone</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>National ID</TableHead>
+                        <TableHead>Past Trips</TableHead>
+                        <TableHead>Unpaid</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {passengers
+                        .filter(
+                          (p) =>
+                            p.name
+                              .toLowerCase()
+                              .includes(lookupQuery.toLowerCase()) ||
+                            p.phone.includes(lookupQuery)
+                        )
+                        .map((p) => {
+                          const handleView = () => {
+                            const pBookings = bookings.filter(
+                              (b) => b.passengerId === p.id
+                            );
+                            const pPayments = transactions.filter(
+                              (t) => t.passengerId === p.id
+                            );
+                            toast(`Passenger: ${p.name}\nTrips: ${pBookings.length}\nPayments: ${pPayments.length}\nUnpaid bookings: ${p.unpaidBookings}`)
+                          };
+
+                          const handleCollectPayment = () => {
+                            const unpaid = bookings.filter(
+                              (b) =>
+                                b.passengerId === p.id &&
+                                !b.paid &&
+                                b.status === "booked"
+                            );
+                            if (unpaid.length === 0)
+                              return toast("No unpaid bookings.");
+                            const choice = prompt(
+                              `Unpaid bookings: ${unpaid
+                                .map(
+                                  (u) =>
+                                    `${u.id} (Bus ${u.busNumber} Seat ${u.seatNumber})`
+                                )
+                                .join("; ")}\nEnter booking id to mark paid:`
+                            );
+                            if (!choice) return;
+                            const bid = Number(choice);
+                            const booking = unpaid.find((u) => u.id === bid);
+                            if (!booking)
+                              return pushNotification("Invalid booking id.");
+                            const payAmount = Number(
+                              prompt("Enter amount to record (numeric):") || "0"
+                            );
+                            if (!payAmount || payAmount <= 0)
+                              return pushNotification("Invalid amount.");
+                            const tx = {
+                              id: transactions.length + 1,
+                              item: `Booking ${booking.id}`,
+                              quantity: 1,
+                              price: payAmount,
+                              paymentType: "cash",
+                              total: payAmount,
+                              status: "paid",
+                              passengerId: p.id,
+                              bookingId: booking.id,
+                            };
+                            setTransactions((s) => [...s, tx]);
+                            setBookings((bs) =>
+                              bs.map((b) =>
+                                b.id === booking.id ? { ...b, paid: true } : b
+                              )
+                            );
+                            setPassengers((ps) =>
+                              ps.map((pp) =>
+                                pp.id === p.id
+                                  ? {
+                                      ...pp,
+                                      unpaidBookings: Math.max(
+                                        0,
+                                        pp.unpaidBookings - 1
+                                      ),
+                                      pastTrips: pp.pastTrips + 1,
+                                    }
+                                  : pp
+                              )
+                            );
+                            pushNotification(
+                              `Recorded payment for booking ${booking.id}`,
+                              "success"
+                            );
+                          };
+
+                          const handleCancelBookingClick = () => {
+                            const unpaid = bookings.filter(
+                              (b) =>
+                                b.passengerId === p.id &&
+                                !b.paid &&
+                                b.status === "booked"
+                            );
+                            if (unpaid.length === 0)
+                              return pushNotification("No unpaid bookings.");
+                            const choice = prompt(
+                              `Unpaid bookings: ${unpaid
+                                .map((u) => u.id)
+                                .join(", ")}\nEnter booking id to cancel:`
+                            );
+                            if (!choice) return;
+                            const bid = Number(choice);
+                            handleCancelBooking(bid);
+                          };
+
+                          return (
+                            <TableRow key={p.id}>
+                              <TableCell>{p.id}</TableCell>
+                              <TableCell>{p.id}</TableCell>
+                              <TableCell>{p.name}</TableCell>
+                              <TableCell>{p.phone}</TableCell>
+                              <TableCell>{p.email || "-"}</TableCell>
+                              <TableCell>{p.nationalId || "-"}</TableCell>
+                              <TableCell>{p.pastTrips}</TableCell>
+                              <TableCell>
+                                {p.unpaidBookings > 0 ? (
+                                  <span className="text-destructive">
+                                    {p.unpaidBookings}
+                                  </span>
+                                ) : (
+                                  "0"
+                                )}
+                              </TableCell>
+                              <TableCell className="flex gap-2">
+                                <Button size="sm" onClick={handleView}>
+                                  View
+                                </Button>
+                                <Button size="sm" onClick={handleCollectPayment}>
+                                  Collect Payment
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  onClick={handleCancelBookingClick}
+                                >
+                                  Cancel Booking
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      {passengers.length === 0 && (
+                        <TableRow>
+                          <TableCell
+                            colSpan={9}
+                            className="p-4 text-center text-slate-500"
+                          >
+                            No passengers yet
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {activeTab === "payments" && (
+            <div className="space-y-6">
+              <h2 className="text-xl font-bold">Payment Handling</h2>
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+                <Input
+                  placeholder="Item / Description"
+                  value={newPayment.item}
+                  onChange={(e) =>
+                    setNewPayment({ ...newPayment, item: e.target.value })
+                  }
+                />
+                <Input
+                  type="number"
+                  placeholder="Price"
+                  value={newPayment.price}
+                  onChange={(e) =>
+                    setNewPayment({ ...newPayment, price: Number(e.target.value) })
+                  }
+                />
+                <select
+                  className="border rounded p-2"
+                  value={newPayment.paymentType}
+                  onChange={(e) =>
+                    setNewPayment({ ...newPayment, paymentType: e.target.value })
+                  }
+                >
+                  <option value="cash">Cash</option>
+                  <option value="online">Online</option>
+                </select>
+
+                <select
+                  className="border rounded p-2"
+                  value={newPayment.passengerId}
+                  onChange={(e) =>
+                    setNewPayment({ ...newPayment, passengerId: e.target.value })
+                  }
+                >
+                  <option value="">(Optional) Link to passenger</option>
+                  {passengers.map((p) => (
+                    <option key={p.id} value={String(p.id)}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  className="border rounded p-2"
+                  value={newPayment.bookingId}
+                  onChange={(e) =>
+                    setNewPayment({ ...newPayment, bookingId: e.target.value })
+                  }
+                >
+                  <option value="">(Optional) Link to booking</option>
+                  {bookings
+                    .filter((b) => b.status === "booked" && !b.paid)
+                    .map((b) => (
+                      <option key={b.id} value={String(b.id)}>
+                        Booking {b.id} — {b.passengerName} (Bus {b.busNumber} Seat{" "}
+                        {b.seatNumber})
+                      </option>
+                    ))}
+                </select>
+
+                <Button onClick={handleAddPayment}>Record Payment</Button>
+              </div>
+
+              {/* Payments list (from first) */}
+              <div className="overflow-x-auto">
+                <table className="w-full table-auto border border-slate-200">
+                  <thead className="bg-slate-100">
+                    <tr>
+                      <th className="p-2">#</th>
+                      <th className="p-2">Item</th>
+                      <th className="p-2">Passenger</th>
+                      <th className="p-2">Booking</th>
+                      <th className="p-2">Type</th>
+                      <th className="p-2">Amount</th>
+                      <th className="p-2">Status</th>
+                      <th className="p-2">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {transactions.map((t) => (
+                      <tr key={t.id} className="text-center border-t">
+                        <td className="p-2">{t.id}</td>
+                        <td className="p-2">{t.item}</td>
+                        <td className="p-2">
+                          {t.passengerId
+                            ? passengers.find((p) => p.id === t.passengerId)
+                                ?.name ?? "-"
+                            : "-"}
+                        </td>
+                        <td className="p-2">
+                          {t.bookingId ? String(t.bookingId) : "-"}
+                        </td>
+                        <td className="p-2">{t.paymentType}</td>
+                        <td className="p-2">${t.total.toFixed(2)}</td>
+                        <td className="p-2">{t.status}</td>
+                        <td className="p-2 space-x-2">
+                          {t.status === "paid" && (
+                            <Button
+                              size="sm"
+                              onClick={() => markPaymentPending(t.id)}
+                            >
+                              Mark Pending
+                            </Button>
+                          )}
+                          {t.status !== "refunded" && (
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => refundPayment(t.id)}
+                            >
+                              Refund
+                            </Button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                    {transactions.length === 0 && (
+                      <tr>
+                        <td colSpan={8} className="p-4 text-center text-slate-500">
+                          No payments yet
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Additional Payment/Refund from second */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Accept Payment</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <Select
+                      value={selectedBookingId || ""}
+                      onValueChange={setSelectedBookingId}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Booking" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {bookings
+                          .filter(
+                            (b) =>
+                              (b.status === "pending" || b.status === "approved") &&
+                              b.paymentStatus !== "paid"
+                          )
+                          .map((b) => (
+                            <SelectItem key={b.id} value={b.id.toString()}>
+                              #{b.id} - ETB {b.price * b.passengers}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    {selectedBookingId && (
+                      <>
+                        <div className="space-y-2">
+                          <Label>Payment Method</Label>
+                          <Select
+                            value={paymentMethod}
+                            onValueChange={setPaymentMethod}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="cash">Cash</SelectItem>
+                              <SelectItem value="online">
+                                Online / Mobile Money
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Total Amount Received</Label>
+                          <Input
+                            type="number"
+                            value={amountReceived}
+                            onChange={(e) =>
+                              setAmountReceived(parseFloat(e.target.value))
+                            }
+                          />
+                        </div>
+                        <Button onClick={handleRecordPayment} className="w-full">
+                          Record & Sync
+                        </Button>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Refund Management</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <Select
+                      value={selectedBookingId || ""}
+                      onValueChange={setSelectedBookingId}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Booking for Refund" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {bookings
+                          .filter(
+                            (b) =>
+                              b.status === "denied" ||
+                              b.status === "change_denied" ||
+                              b.status === "approved"
+                          )
+                          .map((b) => (
+                            <SelectItem key={b.id} value={b.id.toString()}>
+                              #{b.id}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    {selectedBookingId && (
+                      <>
+                        <div className="space-y-2">
+                          <Label>Refund Amount</Label>
+                          <Input
+                            type="number"
+                            value={refundAmount}
+                            onChange={(e) =>
+                              setRefundAmount(parseFloat(e.target.value))
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Refund Method</Label>
+                          <Select
+                            value={refundMethod}
+                            onValueChange={setRefundMethod}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="cash">Cash</SelectItem>
+                              <SelectItem value="credit">Credit</SelectItem>
+                              <SelectItem value="wallet">Wallet Balance</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Refund Reason</Label>
+                          <Textarea
+                            value={refundReason}
+                            onChange={(e) => setRefundReason(e.target.value)}
+                          />
+                        </div>
+                        <Button
+                          onClick={handleRefund}
+                          variant="destructive"
+                          className="w-full"
+                        >
+                          Process Refund
+                        </Button>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "history" && (
+            <div className="overflow-x-auto">
+              <table className="w-full table-auto border border-slate-200">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="p-2">#</th>
+                    <th className="p-2">Item</th>
+                    <th className="p-2">Qty</th>
+                    <th className="p-2">Price</th>
+                    <th className="p-2">Payment</th>
+                    <th className="p-2">Total</th>
+                    <th className="p-2">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {transactions.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="p-4 text-center text-slate-500">
+                        No transactions yet
+                      </td>
+                    </tr>
+                  ) : (
+                    transactions.map((t) => (
+                      <tr
+                        key={t.id}
+                        className="text-center border-t border-slate-200"
+                      >
+                        <td className="p-2">{t.id}</td>
+                        <td className="p-2">{t.item}</td>
+                        <td className="p-2">{t.quantity}</td>
+                        <td className="p-2">${t.price.toFixed(2)}</td>
+                        <td className="p-2">{t.paymentType}</td>
+                        <td className="p-2">${t.total.toFixed(2)}</td>
+                        <td className="p-2">{t.status}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {activeTab === "reports" && (
+            <div className="space-y-6">
+              <h2 className="text-xl font-bold">Sales & Revenue Summary</h2>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Summary</CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                  <div>
+                    <p className="text-muted-foreground">Tickets Today</p>
+                    <p className="text-2xl font-bold">{totalTickets}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Tickets Weekly</p>
+                    <p className="text-2xl font-bold">{weeklyTickets}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Revenue Today</p>
+                    <p className="text-2xl font-bold text-green-600">
+                      ETB {totalRevenue}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Cancellations</p>
+                    <p className="text-2xl font-bold text-destructive">
+                      {cancellations}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Revenue Breakdown by Route</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Start Date</Label>
+                        <Input
+                          type="date"
+                          value={dateRange.start}
+                          onChange={(e) =>
+                            setDateRange({ ...dateRange, start: e.target.value })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>End Date</Label>
+                        <Input
+                          type="date"
+                          value={dateRange.end}
+                          onChange={(e) =>
+                            setDateRange({ ...dateRange, end: e.target.value })
+                          }
+                        />
+                      </div>
+                    </div>
+                    <Button onClick={generateRevenueBreakdown}>
+                      Filter & Generate
+                    </Button>
+                    {revenueBreakdown.length > 0 && (
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                        {revenueBreakdown.map(([route, rev]) => (
+                          <div
+                            key={route}
+                            className="flex justify-between p-2 bg-muted rounded"
+                          >
+                            <span className="text-sm">{route}</span>
+                            <span className="font-bold text-green-600">
+                              ETB {rev}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Breakdown by Payment Type</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex justify-around text-center pt-6">
+                    <div>
+                      <p className="text-2xl font-bold text-green-600">
+                        ETB {paymentTypeBreakdown.cash}
+                      </p>
+                      <p className="text-muted-foreground">Cash</p>
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-blue-600">
+                        ETB {paymentTypeBreakdown.online}
+                      </p>
+                      <p className="text-muted-foreground">Online</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "support" && (
+            <div className="space-y-6">
+              <h2 className="text-xl font-bold">Support & Escalation</h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Escalate Issue</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <Textarea
+                      placeholder="Describe the unresolved refund/payment problem..."
+                      value={escalationIssue}
+                      onChange={(e) => setEscalationIssue(e.target.value)}
+                    />
+                    <Button onClick={handleEscalate}>Send to Support Team</Button>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Chat with Admin</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="h-40 bg-muted rounded p-2 overflow-y-auto space-y-2">
+                      {chatMessages.map((msg, idx) => (
+                        <div
+                          key={idx}
+                          className={`p-2 rounded max-w-[80%] ${
+                            msg.sender === "cashier"
+                              ? "bg-primary text-primary-foreground ml-auto"
+                              : "bg-secondary"
+                          }`}
+                        >
+                          <p>{msg.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <Input
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        placeholder="Type urgent message..."
+                        onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                      />
+                      <Button onClick={handleSendMessage}>Send</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
 
       {/* Issue Ticket Dialog (from second) */}
       <Dialog open={issueTicketOpen} onOpenChange={setIssueTicketOpen}>
