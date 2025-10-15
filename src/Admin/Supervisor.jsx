@@ -57,6 +57,9 @@ import {
   CreditCard,
   FileText as FileTextIcon,
 } from "lucide-react";
+
+import { motion } from "framer-motion";
+
 import {
   LineChart,
   Line,
@@ -1593,40 +1596,94 @@ function Supervisor() {
                     </CardContent>
                   </Card>
                 ) : (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {refunds
-                      .filter((r) => r.status === "approved")
-                      .map((refund) => (
-                        <Card
-                          key={refund.id}
-                          className="border-2 border-green-200"
-                        >
-                          <CardHeader className="flex flex-row items-start justify-between">
-                            <CardTitle>Refund #{refund.id}</CardTitle>
-                            <Badge variant="default">
-                              {getStatusBadge(refund.status)}
-                            </Badge>
-                          </CardHeader>
-                          <CardContent className="space-y-4">
-                            <div>
-                              <p className="text-sm font-semibold text-gray-700">
-                                Refund Date
-                              </p>
-                              <p className="text-gray-900">
-                                {refund.RefundDate}
-                              </p>
-                            </div>
-                            <div className="w-full text-center py-2">
-                              <Badge
-                                variant="default"
-                                className="text-green-600"
-                              >
-                                Refund Approved
-                              </Badge>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                  <div className="space-y-6">
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center justify-between"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="h-6 w-6 text-green-500" />
+                        <h2 className="text-2xl font-bold text-gray-900">
+                          Approved Refunds
+                        </h2>
+                      </div>
+                      <Badge
+                        variant="secondary"
+                        className="bg-green-50 text-green-700 border-green-200"
+                      >
+                        {refunds.filter((r) => r.status === "approved").length}{" "}
+                        Total
+                      </Badge>
+                    </motion.div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {refunds
+                        .filter((r) => r.status === "approved")
+                        .map((refund, index) => (
+                          <motion.div
+                            key={refund.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                            whileHover={{ scale: 1.02, y: -5 }}
+                            className="group"
+                          >
+                            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden relative">
+                              {/* Subtle gradient overlay on hover */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                              <CardHeader className="pb-4 relative z-10">
+                                <div className="flex items-start justify-between">
+                                  <div className="flex items-center space-x-3">
+                                    <div className="p-2 bg-green-100 rounded-lg">
+                                      <DollarSign className="h-5 w-5 text-green-600" />
+                                    </div>
+                                    <div>
+                                      <CardTitle className="text-xl font-bold text-gray-900 leading-tight">
+                                        Refund #{refund.id}
+                                      </CardTitle>
+                                      <p className="text-sm text-gray-500 mt-1">
+                                        Successfully processed
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <Badge
+                                    variant="default"
+                                    className="bg-green-500 hover:bg-green-600 text-white shadow-md px-3 py-1"
+                                  >
+                                    {getStatusBadge(refund.status)}
+                                  </Badge>
+                                </div>
+                              </CardHeader>
+
+                              <CardContent className="pt-0 relative z-10 space-y-6">
+                                <div className="flex items-center space-x-3 p-3 bg-white/50 rounded-xl backdrop-blur-sm border">
+                                  <Calendar className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                                  <div>
+                                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                                      Refund Date
+                                    </p>
+                                    <p className="text-lg font-semibold text-gray-900">
+                                      {refund.RefundDate}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="text-center py-4">
+                                  <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
+                                  >
+                                    <CheckCircle className="h-4 w-4 mr-2" />
+                                    Refund Approved
+                                  </motion.div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </motion.div>
+                        ))}
+                    </div>
                   </div>
                 ))}
 
@@ -1733,10 +1790,10 @@ function Supervisor() {
                 </CardContent>
               </Card>
             </div>
-          <div className="flex justify-end">
-                <Button className="bg-green-500">Generate Full Report</Button>
-          </div>
-          
+            <div className="flex justify-end">
+              <Button className="bg-green-500">Generate Full Report</Button>
+            </div>
+
             {/* Additional chart from second */}
             <ChartCard title="📊 Reports & Analytics">
               <ResponsiveContainer width="100%" height={250}>
