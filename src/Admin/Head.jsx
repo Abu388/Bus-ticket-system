@@ -501,7 +501,7 @@ function ComprehensiveAdminDashboard() {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6 bg-background min-h-screen bg-gray-300 ">
+    <div className="container mx-auto p-6 space-y-6 bg-background min-h-screen ">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">Admin Control Panel</h1>
       </div>
@@ -891,11 +891,11 @@ function ComprehensiveAdminDashboard() {
           <Button variant="outline"><FileText className="h-4 w-4 mr-2" /> View All Bookings</Button>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap gap-2 mb-4">
-            <Input type="date" placeholder="Date" value={bookingFilter.date} onChange={(e) => setBookingFilter({...bookingFilter, date: e.target.value})} className="w-32" />
-            <Input type="text" placeholder="Route" value={bookingFilter.route} onChange={(e) => setBookingFilter({...bookingFilter, route: e.target.value})} className="w-32" />
+          <div className="flex flex-wrap gap-4 mb-4 p-4 rounded-md items-center justify-center">
+            <Input className="bg-white w-[200px]" type="date" placeholder="Date" value={bookingFilter.date} onChange={(e) => setBookingFilter({...bookingFilter, date: e.target.value})}  />
+            <Input className="bg-white w-[200px]" type="text" placeholder="Route" value={bookingFilter.route} onChange={(e) => setBookingFilter({...bookingFilter, route: e.target.value})} />
             <Select value={bookingFilter.status} onValueChange={(value) => setBookingFilter({...bookingFilter, status: value})}>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="bg-white w-[200px]">
                 <SelectValue placeholder="All Status" />
               </SelectTrigger>
               <SelectContent>
