@@ -28,7 +28,7 @@ function App() {
           <Header />
           <main>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Tiket />} />
               <Route path="/ticket" element={<Tiket />} />
               <Route path='/typeOfBuss' element={<TypeOfBuss/>}/>
               <Route path='/AvailableSpots' element={<AvailableSpots/>}/>
