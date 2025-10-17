@@ -19,7 +19,7 @@ import {RefundProvider} from './Context/RefundContext.jsx';
 import TravelBooking from './ManageBooking/TravelBooking'
 import TypesOfBus from './Types/TypesOfBus'
 import Driver from './Driver/Driver.jsx'
-
+import { Toaster } from "@/components/ui/sonner"
 function App() {
   return (
     <BookingProvider>
@@ -28,7 +28,7 @@ function App() {
           <Header />
           <main>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Tiket />} />
               <Route path="/ticket" element={<Tiket />} />
               <Route path='/typeOfBuss' element={<TypeOfBuss/>}/>
               <Route path='/AvailableSpots' element={<AvailableSpots/>}/>
@@ -47,6 +47,7 @@ function App() {
               <Route path="*" element={<h1>404 Not Found</h1>} />
             </Routes>
           </main>
+            <Toaster />
         </div>
       </RefundProvider>
     </BookingProvider>
