@@ -7,7 +7,7 @@ import Naveigator from "./Header/Naveigator";
 
 function AvailableSpots() {
   const [bookingSubmitted, setBookingSubmitted] = useState(false);
-  const [availableSeats, setAvailableSeats] = useState([]);
+  const [availableSeats, setAvailableSeats] = useState([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30, 31,32,33,34,35,36,37,38,39,40, 41,42,43,44,45,46,47,48,49,50]);
   const navigate = useNavigate();
   const { addBooking, bookingData, allBookings } = useContext(BookingContext);
   const location = useLocation();
@@ -17,10 +17,25 @@ function AvailableSpots() {
     Array.from({ length: passengers }, () => ({
       name: "",
       phone: "",
-      seat: ""
+      seat: "",
+      pickup: "",
+      dropoff: ""
     }))
   );
 
+  // Common pickup and drop-off towns in Ethiopian context
+  const ethiopianTowns = [
+    "Addis Ababa",
+    "Adama",
+    "Bahir Dar",
+    "Gondar",
+    "Hawassa",
+    "Jimma",
+    "Mekelle",
+    "Dire Dawa",
+    "Dessie",
+    "Debre Markos"
+  ];
 
   const handlePassengerInfoSet = (index, field, value) => {
     const updatedPassengerInfo = [...passengerInfo];
@@ -51,7 +66,8 @@ function AvailableSpots() {
 
     // Validate all fields are filled
     for (let i = 0; i < passengerInfo.length; i++) {
-      if (!passengerInfo[i].name || !passengerInfo[i].phone || !passengerInfo[i].seat) {
+      if (!passengerInfo[i].name || !passengerInfo[i].phone || !passengerInfo[i].seat || 
+          !passengerInfo[i].pickup || !passengerInfo[i].dropoff) {
         alert(`Please fill all information for passenger ${i + 1}`);
         return;
       }
@@ -69,6 +85,8 @@ function AvailableSpots() {
         name: p.name,
         phone: p.phone,
         selected_spot: Number(p.seat),
+        pickup: p.pickup,
+        dropoff: p.dropoff
       })),
     };
 
@@ -94,7 +112,9 @@ function AvailableSpots() {
             passengerInfo: passengerInfo.map(p => ({
               name: p.name,
               phone: p.phone,
-              selected_spot: Number(p.seat), // convert string seat → number
+              selected_spot: Number(p.seat),
+              pickup: p.pickup,
+              dropoff: p.dropoff
             }))
           }),
         }
@@ -106,45 +126,41 @@ function AvailableSpots() {
       console.error("Error sending data:", error);
     }
   };
- 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-
-
       {/* Hero Section */}
-      <section className="relative py-16 px-4">
+      <section className="relative py-8 px-4 sm:py-12 sm:px-6 lg:py-16 lg:px-8">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
         <div className="relative max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-5xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               Complete Your Booking
             </h1>
-            <p className="text-xl text-gray-600 max-w-6xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-4xl mx-auto">
               Select your seats and enter passenger details to finalize your journey from {from} to {to}
             </p>
           </div>
 
           {/* Trip Details Card */}
-          <div className="bg-white rounded-3xl shadow-2xl p-8 mb-12 border border-gray-100">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-
+          <div className="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 mb-8 sm:mb-12 border border-gray-100">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 items-center">
               {/* Journey Type Badge */}
-              <div className="lg:col-span-12 mb-6">
+              <div className="sm:col-span-2 lg:col-span-4 mb-6">
                 <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-semibold">
-                  One Way Journey
+                  Town-to-Town Journey
                 </div>
               </div>
 
               {/* Route */}
-              <div className="lg:col-span-3">
+              <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                   <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
                   Route
                 </label>
                 <div className="relative">
                   <div className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl bg-gray-50">
-                    <span className="text-lg font-semibold text-gray-900">{from} → {to}</span>
+                    <span className="text-sm sm:text-lg font-semibold text-gray-900">{from} → {to}</span>
                   </div>
                   <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                     <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,7 +171,7 @@ function AvailableSpots() {
               </div>
 
               {/* Date & Time */}
-              <div className="lg:col-span-3">
+              <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                   <span className="w-2 h-2 bg-green-500 rounded-full"></span>
                   Departure
@@ -173,7 +189,7 @@ function AvailableSpots() {
               </div>
 
               {/* Bus Information */}
-              <div className="lg:col-span-3">
+              <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                   <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
                   Bus Type
@@ -191,7 +207,7 @@ function AvailableSpots() {
               </div>
 
               {/* Price & Passengers */}
-              <div className="lg:col-span-3">
+              <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                   <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
                   Total
@@ -209,17 +225,16 @@ function AvailableSpots() {
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
 
           {/* Bus Image Section */}
-          <div className="bg-white rounded-3xl shadow-2xl p-8 mb-12 border border-gray-100">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+          <div className="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 mb-8 sm:mb-12 border border-gray-100">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">
               Your Selected Bus: {busName}
             </h2>
             <div className="flex justify-center">
-              <div className="relative w-full max-w-2xl h-64 overflow-hidden rounded-2xl">
+              <div className="relative w-full max-w-2xl h-48 sm:h-64 overflow-hidden rounded-2xl">
                 <img
                   src={busImage}
                   alt={busName}
@@ -230,7 +245,7 @@ function AvailableSpots() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
-                  <p className="text-lg font-semibold">{busName}</p>
+                  <p className="text-base sm:text-lg font-semibold">{busName}</p>
                   <p className="text-sm">Premium Comfort Bus</p>
                 </div>
               </div>
@@ -238,37 +253,37 @@ function AvailableSpots() {
           </div>
 
           {/* Seat Selection Section */}
-          <div className="bg-white rounded-3xl shadow-2xl p-8 mb-12 border border-gray-100">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+          <div className="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 mb-8 sm:mb-12 border border-gray-100">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">
               Select Your Seats
             </h2>
-            <p className="text-gray-600 text-center mb-8">
+            <p className="text-gray-600 text-center mb-8 text-sm sm:text-base">
               Choose {passengers} seat{passengers > 1 ? 's' : ''} for your journey. Available seats are shown in blue.
             </p>
             <Spot onSeatsFetched={setAvailableSeats} />
           </div>
 
           {/* Passenger Information Form */}
-          <div className="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+          <div className="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 border border-gray-100">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">
               Passenger Information
             </h2>
-            <p className="text-gray-600 text-center mb-8">
+            <p className="text-gray-600 text-center mb-8 text-sm sm:text-base">
               Please enter details for all {passengers} passenger{passengers > 1 ? 's' : ''}
             </p>
 
             <form onSubmit={handleSubmit}>
               <div className="space-y-6">
                 {passengerInfo.map((passenger, index) => (
-                  <div key={index} className="border-2 border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300">
-                    <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <div key={index} className="border-2 border-gray-200 rounded-2xl p-4 sm:p-6 hover:shadow-lg transition-all duration-300">
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                       <span className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm">
                         {index + 1}
                       </span>
                       Passenger {index + 1}
                     </h3>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                       {/* Full Name */}
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
@@ -304,12 +319,68 @@ function AvailableSpots() {
                             value={passenger.phone}
                             onChange={(e) => handlePassengerInfoChange(index, 'phone', e.target.value)}
                             className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200"
-                            placeholder="Enter phone number"
+                            placeholder="Enter phone number (e.g., +2519...)"
                             required
                           />
                           <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                             <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Pickup Location */}
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                          <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                          Pickup Town
+                        </label>
+                        <div className="relative">
+                          <select
+                            value={passenger.pickup}
+                            onChange={(e) => handlePassengerInfoSet(index, 'pickup', e.target.value)}
+                            className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-200 appearance-none bg-white"
+                            required
+                          >
+                            <option value="">Select Pickup Town</option>
+                            {ethiopianTowns.filter(town => town !== to).map(town => (
+                              <option key={town} value={town}>
+                                {town}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314  Bas1z" />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Drop-off Location */}
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                          <span className="w-2 h-2 bg-teal-500 rounded-full"></span>
+                          Drop-off Town
+                        </label>
+                        <div className="relative">
+                          <select
+                            value={passenger.dropoff}
+                            onChange={(e) => handlePassengerInfoSet(index, 'dropoff', e.target.value)}
+                            className="w-full p-4 pl-12 border-2 border-gray-200 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all duration-200 appearance-none bg-white"
+                            required
+                          >
+                            <option value="">Select Drop-off Town</option>
+                            {ethiopianTowns.filter(town => town !== from).map(town => (
+                              <option key={town} value={town}>
+                                {town}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 Pill 4-4.243a8 8 0 1111.314 0z" />
                             </svg>
                           </div>
                         </div>
@@ -351,11 +422,10 @@ function AvailableSpots() {
               </div>
 
               {/* Submit Button */}
-              <div className="flex justify-center mt-8">
+              <div className="flex justify-center mt-6 sm:mt-8">
                 <button
-                  // onClick={SendValue}
                   type="submit"
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-12 py-4 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 sm:px-12 py-3 sm:py-4 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-200 font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                 >
                   Confirm Booking
                 </button>
@@ -365,14 +435,14 @@ function AvailableSpots() {
 
           {/* Success Message */}
           {bookingSubmitted && (
-            <div className="fixed top-4 right-4 bg-gradient-to-r from-green-500 to-teal-500 text-white px-6 py-4 rounded-xl shadow-2xl z-50 animate-slide-in">
+            <div className="fixed top-4 right-4 bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-xl shadow-2xl z-50 animate-slide-in">
               <div className="flex items-center gap-3">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 sm:w-6 h-5 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
-                  <span className="font-semibold">Booking Submitted Successfully!</span>
-                  <p className="text-sm opacity-90">Track your booking status in 'Manage Booking'</p>
+                  <span className="font-semibold text-sm sm:text-base">Booking Submitted Successfully!</span>
+                  <p className="text-xs sm:text-sm opacity-90">Track your booking status in 'Manage Booking'</p>
                 </div>
               </div>
             </div>
